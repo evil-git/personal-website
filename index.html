@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVIL </title>
+    <title>[EVIL] - Full Stack Developer & Dynamic Design</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Load Font Awesome for high-quality icons -->
@@ -88,7 +88,7 @@
     -->
     <header id="home" class="relative overflow-hidden pt-24 pb-32 bg-indigo-50 dark:bg-gray-900 transition duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-[fadeIn_1.5s_ease-out]">
-            <p class="text-xl font-medium text-indigo-600 dark:text-indigo-400 mb-4">Hello there</p>
+            <p class="text-xl font-medium text-indigo-600 dark:text-indigo-400 mb-4">Hello, World!</p>
             <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
                 I'm <span class="text-indigo-700 dark:text-indigo-400">[EVIL]</span>
             </h1>
@@ -102,7 +102,7 @@
     <main>
         <!-- 
             ============================================================ 
-            3. About Section (Scroll Reveal)
+            3. About Section (Scroll Reveal) - UPDATED with LLM Feature
             ============================================================ 
         -->
         <section id="about" class="py-20 scroll-reveal">
@@ -124,16 +124,36 @@
                         </ul>
                     </div>
 
-                    <!-- Description -->
+                    <!-- Description and New LLM Feature -->
                     <div class="lg:w-2/3">
-                        <p class="text-lg leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
+                        <p id="about-description" class="text-lg leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
                             I am a **results-driven software engineer** specializing in the MERN stack (MongoDB, Express, React, Node.js). My passion lies in translating complex business requirements into elegant, high-performance web applications. I thrive in environments that challenge me to explore new technologies and optimize for accessibility and speed.
                         </p>
-                        <div class="grid grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 font-medium">
+                        <div class="grid grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 font-medium mb-6">
                             <p><i class="fas fa-rocket text-indigo-500 mr-2"></i> Performance Optimization</p>
                             <p><i class="fas fa-flask text-indigo-500 mr-2"></i> Unit & Integration Testing</p>
                             <p><i class="fas fa-lock text-indigo-500 mr-2"></i> Security Best Practices</p>
                             <p><i class="fas fa-palette text-indigo-500 mr-2"></i> Clean UI/UX Design</p>
+                        </div>
+                        
+                        <!-- NEW LLM Feature Block: Elevator Pitch Generator -->
+                        <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-xl shadow-inner mt-8">
+                            <h4 class="font-bold text-indigo-700 dark:text-indigo-300 mb-3 flex items-center">
+                                <i class="fas fa-magic mr-2"></i> AI Career Assistant
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                Generate a concise, attention-grabbing elevator pitch based on the description above.
+                            </p>
+                            <button id="generate-pitch-btn" 
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-105 disabled:opacity-50">
+                                ✨ Generate Elevator Pitch
+                            </button>
+                            <div id="pitch-output-area" class="mt-4 hidden p-3 bg-white dark:bg-gray-800 rounded-lg border-l-4 border-indigo-500">
+                                <p id="loading-indicator" class="text-center text-gray-500 dark:text-gray-400 hidden">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i> Generating pitch...
+                                </p>
+                                <p id="generated-pitch" class="text-gray-900 dark:text-gray-100 italic"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,59 +204,25 @@
 
         <!-- 
             ============================================================ 
-            5. Contact Section (LLM & Clipboard Functionality)
+            5. Contact Section (Direct Email Link)
             ============================================================ 
         -->
         <section id="contact" class="py-20 scroll-reveal">
             <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Let's Connect</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-300 mb-10">
-                    I am actively seeking new opportunities and collaborations. Feel free to reach out directly.
+                    I am actively seeking new opportunities and collaborations. Reach out directly via email to discuss potential projects or roles.
                 </p>
 
-                <!-- AI-Powered Contact Assistant -->
-                <div class="mb-10 p-6 bg-indigo-50 dark:bg-gray-700 rounded-xl shadow-2xl border border-indigo-200 dark:border-gray-600">
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
-                        <i class="fas fa-magic text-indigo-500 mr-3"></i> AI Email Assistant
-                    </h3>
-                    <textarea id="email-topic-input" rows="2" placeholder="Example: I want to discuss a job opportunity, or: I have a potential project idea." 
-                              class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 mb-3 text-sm transition duration-300"></textarea>
-                    
-                    <button id="draft-email-btn" class="w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-[1.01]">
-                        <span class="mr-2">✨ Draft Professional Email</span>
-                    </button>
-
-                    <div id="draft-loading" class="mt-4 hidden text-center text-indigo-500">
-                        <i class="fas fa-spinner fa-spin mr-2"></i> Drafting...
-                    </div>
-                    
-                    <div id="draft-output-container" class="mt-4 hidden p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-left shadow-md">
-                        <p class="font-semibold text-gray-900 dark:text-white mb-2">Generated Draft (Copy Below):</p>
-                        <textarea id="draft-output-text" rows="5" readonly
-                             class="w-full p-2 border border-dashed border-gray-400 dark:border-gray-500 bg-gray-50 dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap resize-none"></textarea>
-                    </div>
-                </div>
-                <!-- End AI Assistant -->
-
-                <!-- Email Button with Clipboard Action -->
-                <button id="email-copy-btn" data-email="evil.developer@pro-site.com" 
-                        class="w-full sm:w-auto flex items-center justify-center mx-auto px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-2xl shadow-red-500/40 transition duration-300 transform hover:scale-105">
+                <!-- Direct Email Link -->
+                <a href="mailto:singha70850@gmail.com" 
+                   class="w-full sm:w-auto inline-flex items-center justify-center mx-auto px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-2xl shadow-red-500/40 transition duration-300 transform hover:scale-105">
                     <i class="fas fa-paper-plane mr-3"></i> 
-                    <span id="email-btn-text">Email Me: evil.developer@pro-site.com</span>
-                </button>
+                    Email Me: singha70850@gmail.com
+                </a>
 
-                <!-- Social Icons -->
-                <div class="mt-12 space-x-6">
-                    <a href="https://linkedin.com/in/yourprofile" target="_blank" aria-label="LinkedIn Profile" class="social-icon text-3xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-300">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="https://github.com/yourusername" target="_blank" aria-label="GitHub Profile" class="social-icon text-3xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-300">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter Profile" class="social-icon text-3xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-300">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                </div>
+                <!-- Social Icons removed -->
+                
             </div>
         </section>
     </main>
@@ -252,37 +238,10 @@
 
     <!-- 
         ============================================================ 
-        7. JavaScript (Dynamic Features)
+        7. JavaScript (Dynamic Features & Gemini API)
         ============================================================ 
     -->
     <script>
-        // --- 0. Gemini API Setup and Utility ---
-        const apiKey = ""; // API key is provided at runtime.
-        const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
-        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
-
-        // Utility function for exponential backoff (retry on rate limit/failure)
-        async function fetchWithRetry(url, options, maxRetries = 5) {
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.ok) {
-                        return response;
-                    }
-                    if (response.status === 429 && i < maxRetries - 1) { 
-                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        continue;
-                    }
-                    throw new Error(`API request failed with status: ${response.status}`);
-                } catch (error) {
-                    if (i === maxRetries - 1) throw error;
-                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                }
-            }
-        }
-        
         // --- 1. Dark Mode Toggling ---
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
@@ -379,104 +338,110 @@
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+        
+        // --- 5. Gemini API Helpers and Elevator Pitch Feature ---
+        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=';
+        const MAX_RETRIES = 3;
 
-
-        // --- 5. Clipboard Copy for Contact Email ---
-        document.getElementById('email-copy-btn').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const button = e.currentTarget;
-            const email = button.getAttribute('data-email');
-            const originalText = button.querySelector('#email-btn-text').textContent;
-
-            try {
-                const tempInput = document.createElement('textarea');
-                tempInput.value = email;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-
-                button.querySelector('#email-btn-text').textContent = 'Email Copied to Clipboard!';
-                button.classList.replace('bg-red-600', 'bg-green-600');
-                button.classList.replace('shadow-red-500/40', 'shadow-green-500/40');
-
-                setTimeout(() => {
-                    button.querySelector('#email-btn-text').textContent = originalText;
-                    button.classList.replace('bg-green-600', 'bg-red-600');
-                    button.classList.replace('shadow-green-500/40', 'shadow-red-500/40');
-                }, 3000);
-
-            } catch (err) {
-                console.error('Copy failed: ', err);
-                button.querySelector('#email-btn-text').textContent = 'Copy Failed (Check Console)';
-                 setTimeout(() => {
-                    button.querySelector('#email-btn-text').textContent = originalText;
-                }, 3000);
-            }
-        });
-
-
-        // --- 6. Gemini Email Draft Generator ---
-        const draftButton = document.getElementById('draft-email-btn');
-        const topicInput = document.getElementById('email-topic-input');
-        const outputContainer = document.getElementById('draft-output-container');
-        const outputTextarea = document.getElementById('draft-output-text');
-        const loadingDiv = document.getElementById('draft-loading');
-
-        draftButton.addEventListener('click', generateEmailDraft);
-
-        async function generateEmailDraft() {
-            const topic = topicInput.value.trim();
-            if (!topic) {
-                // UI feedback for empty input (alert replacement)
-                topicInput.placeholder = "🚨 Please enter a topic before drafting!";
-                topicInput.classList.add('border-red-500', 'ring-2', 'ring-red-500');
-                setTimeout(() => {
-                    topicInput.placeholder = "Example: I want to discuss a job opportunity, or: I have a potential project idea.";
-                    topicInput.classList.remove('border-red-500', 'ring-2', 'ring-red-500');
-                }, 3000);
-                return;
-            }
-
-            loadingDiv.classList.remove('hidden');
-            outputContainer.classList.add('hidden');
-            outputTextarea.value = '';
-            draftButton.disabled = true;
-
-            // System Instruction is crucial for setting the tone and format
-            const systemPrompt = "You are a professional email drafting assistant. Your task is to take a brief topic provided by the user and generate a concise, formal email draft suitable for initiating contact with a professional full-stack developer (named [EVIL]). Ensure the tone is polite and action-oriented. Do not include subject lines, formal greetings (like 'Dear [EVIL]'), or sign-offs ('Sincerely,'). Just provide the body paragraph(s) of the email content.";
-            
-            const payload = {
-                contents: [{ parts: [{ text: topic }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            };
+        /**
+         * Generic function to call the Gemini API with exponential backoff.
+         * @param {object} payload - The request payload.
+         * @param {number} attempt - Current retry attempt.
+         * @returns {Promise<object>} The parsed API response.
+         */
+        async function fetchWithRetry(payload, attempt = 1) {
+            const apiKey = ""; 
+            const url = API_URL + apiKey;
 
             try {
-                const response = await fetchWithRetry(GEMINI_API_URL, {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
-                const generatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (generatedText) {
-                    outputTextarea.value = generatedText;
-                    outputContainer.classList.remove('hidden');
-                } else {
-                    outputTextarea.value = "Error: Could not generate draft. The content may have been blocked or the API failed.";
-                    outputContainer.classList.remove('hidden');
+                if (response.status === 429 && attempt < MAX_RETRIES) {
+                    const delay = Math.pow(2, attempt) * 1000;
+                    console.warn(`Rate limit hit, retrying in ${delay / 1000}s... (Attempt ${attempt})`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(payload, attempt + 1);
                 }
 
-            } catch (error) {
-                console.error('Gemini API call failed:', error);
-                outputTextarea.value = "An error occurred while connecting to the drafting service. Please try again.";
-                outputContainer.classList.remove('hidden');
+                if (!response.ok) {
+                    const errorBody = await response.json();
+                    throw new Error(`API error: ${response.status} - ${JSON.stringify(errorBody)}`);
+                }
 
+                return response.json();
+
+            } catch (error) {
+                if (attempt < MAX_RETRIES) {
+                    const delay = Math.pow(2, attempt) * 1000;
+                    console.error(`Fetch failed, retrying in ${delay / 1000}s... (Attempt ${attempt})`, error);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(payload, attempt + 1);
+                }
+                throw new Error("Gemini API call failed after multiple retries: " + error.message);
+            }
+        }
+
+        /**
+         * Extracts text from the Gemini response.
+         * @param {object} response - The raw API response object.
+         * @returns {string} The generated text.
+         */
+        function extractTextFromResponse(response) {
+            return response.candidates?.[0]?.content?.parts?.[0]?.text || "Generation failed: Could not get a valid response.";
+        }
+
+
+        // Main feature logic for Elevator Pitch
+        document.getElementById('generate-pitch-btn').addEventListener('click', generateElevatorPitch);
+
+        async function generateElevatorPitch() {
+            const btn = document.getElementById('generate-pitch-btn');
+            const aboutText = document.getElementById('about-description').textContent.trim();
+            const outputArea = document.getElementById('pitch-output-area');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const generatedPitch = document.getElementById('generated-pitch');
+
+            // 1. UI State: Start Loading
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating...';
+            outputArea.classList.remove('hidden');
+            loadingIndicator.classList.remove('hidden');
+            generatedPitch.textContent = '';
+
+
+            // 2. Prepare Payload
+            const userQuery = `Using the following professional profile description, write a compelling, 30-second elevator pitch (approximately 2-3 sentences long) that focuses on impact and skills:\n\n---\n${aboutText}`;
+            const systemPrompt = "You are a world-class professional copywriter and career coach. Your goal is to take a developer's long description and condense it into a sharp, energetic, and highly professional elevator pitch. Output ONLY the pitch.";
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { 
+                    temperature: 0.8,
+                    maxOutputTokens: 200 // Ensure the pitch stays concise
+                }
+            };
+
+            try {
+                // 3. Call Gemini API
+                const response = await fetchWithRetry(payload);
+                const pitch = extractTextFromResponse(response);
+                
+                // 4. UI State: Display Result
+                generatedPitch.textContent = pitch;
+
+            } catch (error) {
+                console.error("Error generating elevator pitch:", error);
+                generatedPitch.textContent = "Error: Failed to generate pitch. Please check the console for details.";
             } finally {
-                loadingDiv.classList.add('hidden');
-                draftButton.disabled = false;
+                // 5. UI State: Stop Loading
+                btn.disabled = false;
+                btn.innerHTML = '✨ Generate Elevator Pitch';
+                loadingIndicator.classList.add('hidden');
             }
         }
     </script>
