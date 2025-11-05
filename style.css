@@ -1,3 +1,13 @@
+/* --- Global Reset & Variables --- */
+:root {
+  --primary-color: #007BFF; /* Professional Blue */
+  --secondary-color: #28A745; /* Complementary Green */
+  --text-dark: #333;
+  --text-light: #555;
+  --background-light: #f4f7f6; /* Lighter background */
+  --header-height: 80px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,11 +15,18 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+/* --- Body and Global Styling --- */
 body {
-  background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
-  color: #333;
+  background: var(--background-light);
+  color: var(--text-light);
   line-height: 1.6;
-  animation: fadeInBody 2s ease-in;
+  animation: fadeInBody 1.5s ease-in;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
 }
 
 @keyframes fadeInBody {
@@ -17,17 +34,25 @@ body {
   to { opacity: 1; }
 }
 
+/* --- Navigation Bar --- */
 nav {
   background-color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  height: var(--header-height);
+  padding: 0 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
   z-index: 1000;
-  animation: slideDown 1s ease;
+  animation: slideDown 0.8s ease-out;
+}
+
+.logo {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  font-weight: 700;
 }
 
 @keyframes slideDown {
@@ -36,33 +61,40 @@ nav {
 }
 
 nav a {
-  margin: 0 15px;
+  margin-left: 25px;
   text-decoration: none;
-  color: #444;
-  font-weight: bold;
-  transition: color 0.3s, transform 0.3s;
+  color: var(--text-dark);
+  font-weight: 600;
+  transition: color 0.3s, border-bottom 0.3s;
+  padding-bottom: 5px;
 }
 
 nav a:hover {
-  color: #FF4C60;
-  transform: scale(1.1);
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
 }
 
+/* --- Hero Section --- */
 .hero {
   text-align: center;
-  padding: 100px 20px;
-  animation: fadeUp 1.5s ease;
-}
-
-@keyframes fadeUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  padding: 120px 20px 100px;
+  background: linear-gradient(135deg, #E0F7FA, #B3E5FC); /* Soft gradient for hero */
+  color: var(--text-dark);
+  animation: fadeUp 1s ease-out;
 }
 
 .hero h1 {
-  font-size: 3em;
-  color: #222;
-  animation: zoomIn 1s ease-in-out;
+  font-size: 3.5rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  animation: zoomIn 1s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy effect */
+}
+
+.hero .tagline {
+  font-size: 1.4rem;
+  margin-bottom: 30px;
+  color: var(--text-light);
+  font-weight: 400;
 }
 
 @keyframes zoomIn {
@@ -70,82 +102,226 @@ nav a:hover {
   to { transform: scale(1); opacity: 1; }
 }
 
-.hero p {
-  font-size: 1.2em;
-  margin-top: 10px;
-  animation: fadeIn 2s ease;
+@keyframes fadeUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
+/* --- Section Titles & Content --- */
 .section-title {
-  font-size: 2em;
-  color: #FF4C60;
-  margin-bottom: 20px;
-  animation: slideInLeft 1s ease;
+  font-size: 2.5rem;
+  color: var(--text-dark);
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
 }
 
-@keyframes slideInLeft {
-  from { transform: translateX(-50px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+.section-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: var(--primary-color);
+  margin: 10px auto 0;
+  border-radius: 2px;
 }
 
-.projects ul, .contact ul {
+/* --- About Section Specifics --- */
+.about-content {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 4px solid var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.about-text p {
+  margin-bottom: 15px;
+}
+
+/* --- Portfolio/Skills Grid (Modern Card Layout) --- */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
   list-style: none;
   padding: 0;
-  animation: fadeUp 1.5s ease;
 }
 
-.projects li, .contact li {
+.skill-card {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border-left: 5px solid var(--primary-color);
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.skill-card h3 {
+  color: var(--text-dark);
   margin-bottom: 10px;
-  transition: transform 0.3s;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
 }
 
-.projects li:hover, .contact li:hover {
-  transform: translateX(10px);
+.skill-card h3 i {
+  color: var(--secondary-color);
+  margin-right: 10px;
+  font-size: 1.5rem;
 }
 
+/* --- Buttons --- */
 button {
-  padding: 10px 20px;
-  background-color: #FF4C60;
-  color: white;
+  padding: 12px 30px;
   border: none;
-  border-radius: 8px;
+  border-radius: 50px; /* Pill shape for modern look */
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-button:hover {
-  background-color: #ff6f80;
-  transform: scale(1.05);
+.primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
 }
 
+.primary-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 123, 255, 0.6);
+}
+
+.secondary-btn {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.secondary-btn:hover {
+  background-color: #1e7e34;
+  transform: scale(1.03);
+}
+
+/* --- Contact Section --- */
+.contact-prompt {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto 30px;
+  display: grid;
+  gap: 15px;
+}
+
+.contact-form input[type="email"],
+.contact-form textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.contact-form input[type="email"]:focus,
+.contact-form textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+.contact-form .secondary-btn {
+  justify-self: center;
+  width: 100%; /* Make submit button full width in the form */
+}
+
+
+/* --- Social Icons --- */
 .social-icons {
-  margin-top: 20px;
+  margin-top: 40px;
   text-align: center;
 }
 
 .social-icons a {
-  margin: 0 10px;
-  color: #444;
-  font-size: 1.8em;
+  margin: 0 15px;
+  color: var(--text-light);
+  font-size: 2.2em;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-icons a:hover {
-  color: #FF4C60;
-  transform: scale(1.2);
+  color: var(--primary-color);
+  transform: scale(1.3) rotate(5deg);
 }
 
+/* --- Footer --- */
 footer {
-  background-color: #fff;
+  background-color: #333;
   text-align: center;
-  padding: 20px;
-  font-size: 0.9em;
-  color: #777;
+  padding: 25px;
+  font-size: 0.9rem;
+  color: #bbb;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  animation: fadeIn 2s ease;
+}
+
+/* --- Responsive Design (Pro Level) --- */
+@media (max-width: 768px) {
+  nav {
+    padding: 0 20px;
+  }
+  
+  .nav-links {
+    display: none; /* Often hidden behind a hamburger menu on mobile for a 'pro' look */
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero .tagline {
+    font-size: 1.1rem;
+  }
+
+  .container {
+    padding: 60px 15px;
+  }
+
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    margin-bottom: 20px;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr; /* Single column on small screens */
+  }
+
+  .contact-form {
+    padding: 0 10px;
+  }
 }
