@@ -3,60 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Personal Website</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <title>[EVIL] - Professional Web Developer & Designer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <nav>
-    <div><strong>MySite</strong></div>
-    <div>
+    <div class="logo"><strong>&lt;EVIL/&gt;</strong></div>
+    <div class="nav-links">
       <a href="#home">Home</a>
       <a href="#about">About</a>
-      <a href="#projects">Projects</a>
+      <a href="#portfolio">Portfolio</a>
       <a href="#contact">Contact</a>
     </div>
   </nav>
 
-  <section class="hero" id="home">
-    <h1>Hello, I'm [EVIL]</h1>
-    <p>Welcome to my colorful personal website!</p>
-  </section>
+  <main>
+    <section class="hero" id="home">
+      <h1>Hello, I'm [EVIL]</h1>
+      <p class="tagline">Full Stack Developer | UI/UX Enthusiast | Building Modern Web Experiences.</p>
+      <button class="primary-btn">View My Portfolio</button>
+    </section>
+  
+    <section id="about" class="container">
+      <h2 class="section-title">About Me</h2>
+      <div class="about-content">
+        <div class="profile-avatar" role="img" aria-label="Professional avatar of [EVIL]">
+          <i class="fas fa-code"></i>
+        </div>
+        <div class="about-text">
+          <p>I am a dedicated and results-driven professional with a deep passion for **clean code and intuitive design**. I specialize in creating robust, scalable, and accessible web applications. My background includes a focus on modern front-end frameworks and continuous integration pipelines.</p>
+          <p>Currently, I am seeking opportunities to leverage my skills in a collaborative, fast-paced environment. Let's build something amazing together.</p>
+        </div>
+      </div>
+    </section>
+  
+    <section id="portfolio" class="container">
+      <h2 class="section-title">Portfolio & Experience</h2>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3><i class="fab fa-js-square"></i> Core Technologies</h3>
+          <p>HTML5, CSS3 (Sass/LESS), **JavaScript (ES6+)**, Node.js, Express.js.</p>
+        </div>
+        <div class="skill-card">
+          <h3><i class="fab fa-react"></i> Front-End Development</h3>
+          <p>React, Redux, responsive design, component-based architecture.</p>
+        </div>
+        <div class="skill-card">
+          <h3><i class="fas fa-database"></i> Database & Backend</h3>
+          <p>MongoDB, PostgreSQL, RESTful APIs, authentication (OAuth).</p>
+        </div>
+        <div class="skill-card">
+          <h3><i class="fas fa-tools"></i> Tools & Workflow</h3>
+          <p>Git, Webpack, Figma, Agile methodology, unit testing.</p>
+        </div>
+      </div>
+    </section>
+  
+    <section id="contact" class="container">
+      <h2 class="section-title">Get In Touch</h2>
+      <p class="contact-prompt">I'm currently open to new career opportunities. Send a quick message!</p>
+      
+      <form class="contact-form">
+        <input type="email" placeholder="Your Email" required>
+        <textarea placeholder="Your Message" rows="4" required></textarea>
+        <button type="submit" class="secondary-btn">Send Message</button>
+      </form>
 
-  <section id="about">
-    <h2 class="section-title">About Me</h2>
-    <p>I am passionate about [coding/design/music/etc.]. I love creating things that are beautiful, modern, and useful. Currently exploring web development and design.</p>
-  </section>
-
-  <section id="projects">
-    <h2 class="section-title">Projects / Skills</h2>
-    <ul>
-      <li>🌟 HTML, CSS, JavaScript</li>
-      <li>🌈 UI/UX Design with Figma</li>
-      <li>💡 Created 3 personal websites</li>
-      <li>🚀 Learning React & Git</li>
-    </ul>
-  </section>
-
-  <section id="contact">
-    <h2 class="section-title">Contact Me</h2>
-    <ul>
-      <li>Email: yourname@example.com</li>
-      <li>Instagram: @yourusername</li>
-      <li>LinkedIn: linkedin.com/in/yourprofile</li>
-    </ul>
-    <button>Say Hello</button>
-
-    <div class="social-icons">
-      <a href="https://instagram.com/yourusername" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://linkedin.com/in/yourprofile" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
-    </div>
-  </section>
+      <div class="social-icons">
+        <a href="https://instagram.com/yourusername" target="_blank" aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
+        <a href="https://linkedin.com/in/yourprofile" target="_blank" aria-label="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
+        <a href="https://github.com/yourusername" target="_blank" aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
+      </div>
+    </section>
+  </main>
 
   <footer>
-    &copy; 2025 [EVIL]. All rights reserved.
+    &copy; 2025 [EVIL]. Professionally designed and developed.
   </footer>
 </body>
 </html>
