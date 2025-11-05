@@ -1,86 +1,608 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>[EVIL] - Professional Web Developer & Designer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css" />
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>[EVIL] - Full Stack Developer & Dynamic Design</title>
+
+<!-- Load Tailwind CSS -->
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Load Font Awesome for high-quality icons -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+
+<style>
+
+/* Custom Configuration for Tailwind, using Inter font by default */
+
+html { scroll-behavior: smooth; }
+
+body { font-family: 'Inter', sans-serif; transition: background-color 0.5s, color 0.5s; }
+
+
+
+/* Custom animation keyframes */
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+
+
+/* Animation class to apply when element enters viewport */
+
+.scroll-reveal { opacity: 0; transition: opacity 1s ease-out, transform 1s ease-out; transform: translateY(30px); }
+
+.scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+
+
+
+/* Dark Mode Styling */
+
+.dark body { background-color: #1a202c; color: #e2e8f0; }
+
+.dark .card { background-color: #2d3748; border-color: #4a5568; }
+
+.dark .section-title { color: #fff; }
+
+.dark .nav-link:hover { color: #63b3ed; }
+
+.dark .social-icon:hover { color: #63b3ed; }
+
+
+
+</style>
+
 </head>
-<body>
-  <nav>
-    <div class="logo"><strong>&lt;EVIL/&gt;</strong></div>
-    <div class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#contact">Contact</a>
-    </div>
-  </nav>
 
-  <main>
-    <section class="hero" id="home">
-      <h1>Hello, I'm [EVIL]</h1>
-      <p class="tagline">Full Stack Developer | UI/UX Enthusiast | Building Modern Web Experiences.</p>
-      <button class="primary-btn">View My Portfolio</button>
-    </section>
-  
-    <section id="about" class="container">
-      <h2 class="section-title">About Me</h2>
-      <div class="about-content">
-        <div class="profile-avatar" role="img" aria-label="Professional avatar of [EVIL]">
-          <i class="fas fa-code"></i>
-        </div>
-        <div class="about-text">
-          <p>I am a dedicated and results-driven professional with a deep passion for **clean code and intuitive design**. I specialize in creating robust, scalable, and accessible web applications. My background includes a focus on modern front-end frameworks and continuous integration pipelines.</p>
-          <p>Currently, I am seeking opportunities to leverage my skills in a collaborative, fast-paced environment. Let's build something amazing together.</p>
-        </div>
-      </div>
-    </section>
-  
-    <section id="portfolio" class="container">
-      <h2 class="section-title">Portfolio & Experience</h2>
-      <div class="skills-grid">
-        <div class="skill-card">
-          <h3><i class="fab fa-js-square"></i> Core Technologies</h3>
-          <p>HTML5, CSS3 (Sass/LESS), **JavaScript (ES6+)**, Node.js, Express.js.</p>
-        </div>
-        <div class="skill-card">
-          <h3><i class="fab fa-react"></i> Front-End Development</h3>
-          <p>React, Redux, responsive design, component-based architecture.</p>
-        </div>
-        <div class="skill-card">
-          <h3><i class="fas fa-database"></i> Database & Backend</h3>
-          <p>MongoDB, PostgreSQL, RESTful APIs, authentication (OAuth).</p>
-        </div>
-        <div class="skill-card">
-          <h3><i class="fas fa-tools"></i> Tools & Workflow</h3>
-          <p>Git, Webpack, Figma, Agile methodology, unit testing.</p>
-        </div>
-      </div>
-    </section>
-  
-    <section id="contact" class="container">
-      <h2 class="section-title">Get In Touch</h2>
-      <p class="contact-prompt">I'm currently open to new career opportunities. Send a quick message!</p>
-      
-      <form class="contact-form">
-        <input type="email" placeholder="Your Email" required>
-        <textarea placeholder="Your Message" rows="4" required></textarea>
-        <button type="submit" class="secondary-btn">Send Message</button>
-      </form>
 
-      <div class="social-icons">
-        <a href="https://instagram.com/yourusername" target="_blank" aria-label="Instagram Profile"><i class="fab fa-instagram"></i></a>
-        <a href="https://linkedin.com/in/yourprofile" target="_blank" aria-label="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
-        <a href="https://github.com/yourusername" target="_blank" aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
-      </div>
-    </section>
-  </main>
 
-  <footer>
-    &copy; 2025 [EVIL]. Professionally designed and developed.
-  </footer>
-</body>
-</html>
+<body class="bg-gray-50 text-gray-700 antialiased">
+
+
+
+<!--
+
+============================================================
+
+1. Navigation Bar (Sticky, Responsive, with Dark Mode Toggle)
+
+============================================================
+
+-->
+
+<nav class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-lg transition duration-500">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+<div class="flex justify-between items-center h-16">
+
+<!-- Logo -->
+
+<div class="flex-shrink-0 font-extrabold text-2xl text-indigo-600 dark:text-indigo-400">
+
+&lt;EVIL /&gt;
+
+</div>
+
+
+
+<!-- Desktop Nav Links -->
+
+<div class="hidden md:block">
+
+<div class="ml-10 flex items-baseline space-x-4">
+
+<a href="#home" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Home</a>
+
+<a href="#about" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">About</a>
+
+<a href="#portfolio" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Portfolio</a>
+
+<a href="#contact" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Contact</a>
+
+</div>
+
+</div>
+
+
+
+<!-- Dark Mode Toggle & Mobile Menu Button -->
+
+<div class="flex items-center">
+
+<button id="theme-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300" aria-label="Toggle Dark Mode">
+
+<i id="theme-icon" class="fas fa-sun text-xl"></i>
+
+</button>
+
+<!-- Mobile Menu Button (Hamburger) -->
+
+<button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 ml-3" aria-label="Open main menu">
+
+<i class="fas fa-bars text-xl"></i>
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- Mobile Menu (Hidden by default) -->
+
+<div id="mobile-menu" class="hidden md:hidden">
+
+<div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+
+<a href="#home" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Home</a>
+
+<a href="#about" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">About</a>
+
+<a href="#portfolio" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Portfolio</a>
+
+<a href="#contact" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Contact</a>
+
+</div>
+
+</div>
+
+</nav>
+
+
+
+<!--
+
+============================================================
+
+2. Hero Section (Dynamic Typewriter Effect)
+
+============================================================
+
+-->
+
+<header id="home" class="relative overflow-hidden pt-24 pb-32 bg-indigo-50 dark:bg-gray-900 transition duration-500">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-[fadeIn_1.5s_ease-out]">
+
+<p class="text-xl font-medium text-indigo-600 dark:text-indigo-400 mb-4">Hello, World!</p>
+
+<h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
+
+I'm <span class="text-indigo-700 dark:text-indigo-400">[EVIL]</span>
+
+</h1>
+
+<p id="typewriter-text" class="text-2xl font-light text-gray-600 dark:text-gray-300 h-8"></p>
+
+<a href="#portfolio" class="mt-8 inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+
+View My Work <i class="fas fa-arrow-right ml-2"></i>
+
+</a>
+
+</div>
+
+</header>
+
+
+
+<main>
+
+<!--
+
+============================================================
+
+3. About Section (Scroll Reveal)
+
+============================================================
+
+-->
+
+<section id="about" class="py-20 scroll-reveal">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+<h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">About Me</h2>
+
+<div class="lg:flex lg:items-center lg:space-x-12">
+
+<!-- Profile Card -->
+
+<div class="lg:w-1/3 p-6 card bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-indigo-100 dark:border-gray-700 mb-8 lg:mb-0 transform hover:shadow-indigo-500/20 transition duration-500">
+
+<div class="flex justify-center mb-6">
+
+<div class="w-32 h-32 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-4xl text-indigo-600 dark:text-indigo-400 border-4 border-indigo-300 dark:border-indigo-600">
+
+<i class="fas fa-user-tie"></i>
+
+</div>
+
+</div>
+
+<h3 class="text-center text-2xl font-semibold text-gray-900 dark:text-white">Professional Profile</h3>
+
+<ul class="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
+
+<li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Role: Full Stack Developer</li>
+
+<li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Focus: Scalable Cloud Architecture</li>
+
+<li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Experience: 5+ Years</li>
+
+</ul>
+
+</div>
+
+
+
+<!-- Description -->
+
+<div class="lg:w-2/3">
+
+<p class="text-lg leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
+
+I am a **results-driven software engineer** specializing in the MERN stack (MongoDB, Express, React, Node.js). My passion lies in translating complex business requirements into elegant, high-performance web applications. I thrive in environments that challenge me to explore new technologies and optimize for accessibility and speed.
+
+</p>
+
+<div class="grid grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 font-medium">
+
+<p><i class="fas fa-rocket text-indigo-500 mr-2"></i> Performance Optimization</p>
+
+<p><i class="fas fa-flask text-indigo-500 mr-2"></i> Unit & Integration Testing</p>
+
+<p><i class="fas fa-lock text-indigo-500 mr-2"></i> Security Best Practices</p>
+
+<p><i class="fas fa-palette text-indigo-500 mr-2"></i> Clean UI/UX Design</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!--
+
+============================================================
+
+4. Portfolio/Skills Section (Animated Grid)
+
+============================================================
+
+-->
+
+<section id="portfolio" class="py-20 bg-gray-100 dark:bg-gray-800 scroll-reveal">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+<h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Skills & Projects</h2>
+
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+<!-- Skill Card 1: Frontend -->
+
+<div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-indigo-500 transform hover:scale-[1.02] transition duration-300">
+
+<i class="fab fa-react text-4xl text-indigo-500 mb-4"></i>
+
+<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Frontend Mastery</h3>
+
+<p class="text-gray-600 dark:text-gray-300 text-sm">React, Next.js, Redux, Tailwind CSS. Building highly dynamic and stateful single-page applications.</p>
+
+</div>
+
+
+<!-- Skill Card 2: Backend -->
+
+<div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-green-500 transform hover:scale-[1.02] transition duration-300">
+
+<i class="fas fa-server text-4xl text-green-500 mb-4"></i>
+
+<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Backend & APIs</h3>
+
+<p class="text-gray-600 dark:text-gray-300 text-sm">Node.js, Express, RESTful & GraphQL APIs, secure authentication flows (JWT/OAuth).</p>
+
+</div>
+
+
+
+<!-- Skill Card 3: Database & Cloud -->
+
+<div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-500 transform hover:scale-[1.02] transition duration-300">
+
+<i class="fas fa-cloud text-4xl text-yellow-500 mb-4"></i>
+
+<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Database & DevOps</h3>
+
+<p class="text-gray-600 dark:text-gray-300 text-sm">PostgreSQL, MongoDB, Docker, CI/CD pipelines, and cloud services (AWS/GCP).</p>
+
+</div>
+
+
+</div>
+
+
+
+<!-- Placeholder Project Link -->
+
+<div class="mt-12 text-center">
+
+<a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-indigo-600 dark:text-indigo-400 bg-white dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 shadow-lg transition duration-300">
+
+Explore Full Project Repository <i class="fab fa-github ml-2"></i>
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!--
+
+============================================================
+
+5. Contact Section (LLM & Clipboard Functionality)
+
+============================================================
+
+-->
+
+<section id="contact" class="py-20 scroll-reveal">
+
+<div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+<h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Let's Connect</h2>
+
+<p class="text-lg text-gray-600 dark:text-gray-300 mb-10">
+
+I am actively seeking new opportunities and collaborations. Feel free to reach out directly.
+
+</p>
+
+
+
+<!-- AI-Powered Contact Assistant -->
+
+<div class="mb-10 p-6 bg-indigo-50 dark:bg-gray-700 rounded-xl shadow-2xl border border-indigo-200 dark:border-gray-600">
+
+<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+
+<i class="fas fa-magic text-indigo-500 mr-3"></i> AI Email Assistant
+
+</h3>
+
+<textarea id="email-topic-input" rows="2" placeholder="Example: I want to discuss a job opportunity, or: I have a potential project idea."
+
+class="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 focus:ring-indigo-500 focus:border-indigo-500 mb-3 text-sm transition duration-300"></textarea>
+
+
+<button id="draft-email-btn" class="w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-[1.01]">
+
+<span class="mr-2">✨ Draft Professional Email</span>
+
+</button>
+
+
+
+<div id="draft-loading" class="mt-4 hidden text-center text-indigo-500">
+
+<i class="fas fa-spinner fa-spin mr-2"></i> Drafting...
+
+</div>
+
+
+<div id="draft-output-container" class="mt-4 hidden p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg text-left shadow-md">
+
+<p class="font-semibold text-gray-900 dark:text-white mb-2">Generated Draft (Copy Below):</p>
+
+<textarea id="draft-output-text" rows="5" readonly
+
+class="w-full p-2 border border-dashed border-gray-400 dark:border-gray-500 bg-gray-50 dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap resize-none"></textarea>
+
+</div>
+
+</div>
+
+<!-- End AI Assistant -->
+
+
+
+<!-- Email Button with Clipboard Action -->
+
+<button id="email-copy-btn" data-email="evil.developer@pro-site.com"
+
+class="w-full sm:w-auto flex items-center justify-center mx-auto px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-2xl shadow-red-500/40 transition duration-300 transform hover:scale-105">
+
+<i class="fas fa-paper-plane mr-3"></i>
+
+<span id="email-btn-text">Email Me: evil.developer@pro-site.com</span>
+
+</button>
+
+
+
+<!-- Social Icons -->
+
+<div class="mt-12 space-x-6">
+
+<a href="https://linkedin.com/in/yourprofile" target="_blank" aria-label="LinkedIn Profile" class="social-icon text-3xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-300">
+
+<i class="fab fa-linkedin"></i>
+
+</a>
+
+<a href="https://github.com/yourusername" target="_blank" aria-label="GitHub Profile" class="social-icon text-3xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-300">
+
+<i class="fab fa-github"></i>
+
+</a>
+
+<a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter Profile" class="social-icon text-3xl text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition duration-300">
+
+<i class="fab fa-twitter"></i>
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<!--
+
+============================================================
+
+6. Footer
+
+============================================================
+
+-->
+
+<footer class="py-8 bg-gray-800 dark:bg-gray-900 text-center text-gray-400 text-sm">
+
+<p>&copy; 2025 [EVIL]. Built with Tailwind CSS and High-Level JavaScript. All Rights Reserved.</p>
+
+</footer>
+
+
+
+<!--
+
+============================================================
+
+7. JavaScript (Dynamic Features)
+
+============================================================
+
+-->
+
+<script>
+
+// --- 0. Gemini API Setup and Utility ---
+
+const apiKey = ""; // API key is provided at runtime.
+
+const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
+
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
+
+
+// Utility function for exponential backoff (retry on rate limit/failure)
+
+async function fetchWithRetry(url, options, maxRetries = 5) {
+
+for (let i = 0; i < maxRetries; i++) {
+
+try {
+
+const response = await fetch(url, options);
+
+if (response.ok) {
+
+return response;
+
+}
+
+if (response.status === 429 && i < maxRetries - 1) {
+
+const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+
+await new Promise(resolve => setTimeout(resolve, delay));
+
+continue;
+
+}
+
+throw new Error(`API request failed with status: ${response.status}`);
+
+} catch (error) {
+
+if (i === maxRetries - 1) throw error;
+
+const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+
+await new Promise(resolve => setTimeout(resolve, delay));
+
+}
+
+}
+
+}
+
+
+// --- 1. Dark Mode Toggling ---
+
+const themeToggle = document.getElementById('theme-toggle');
+
+const themeIcon = document.getElementById('theme-icon');
+
+
+
+function applyTheme() {
+
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const isDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && prefersDark);
+
+
+if (isDark) {
+
+document.documentElement.classList.add('dark');
+
+themeIcon.classList.replace('fa-sun', 'fa-moon');
+
+localStorage.setItem('theme', 'dark');
+
+} else {
+
+document.documentElement.classList.remove('dark');
+
+themeIcon.classList.replace('fa-moon', 'fa-sun');
+
+localStorage.setItem('theme', 'light');
+
+}
+
+}
+
+
+
+themeToggle.addEventListener('click', () => {
+
+if (document.documentElement.classList.contains('dark')) {
+
+document.documentElement.classList.remove('dark');
+
+localStorage.setItem('theme', 'light');
