@@ -3,66 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVIL - Full Stack Developer & Dynamic Design</title>
-    <!-- Load Tailwind CSS -->
+    <title>EVIL - The Ultimate Pro Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Font Awesome for high-quality icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <style>
-        /* Custom Configuration for Tailwind, using Inter font by default */
+        /* Custom Configuration and Base Styles */
         html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.5s, color 0.5s; }
-
-        /* Custom animation keyframes */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideInUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.5s, color 0.5s; overflow-x: hidden; }
 
         /* Animation class to apply when element enters viewport */
         .scroll-reveal { opacity: 0; transition: opacity 1s ease-out, transform 1s ease-out; transform: translateY(30px); }
         .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
 
-        /* Dark Mode Styling */
+        /* Dark Mode Styles */
         .dark body { background-color: #1a202c; color: #e2e8f0; }
         .dark .card { background-color: #2d3748; border-color: #4a5568; }
         .dark .section-title { color: #fff; }
-        .dark .nav-link:hover { color: #63b3ed; }
-        .dark .social-icon:hover { color: #63b3ed; }
+        .dark .code-output { background-color: #0d1117; } /* Dark background for code block */
+        
+        /* 3D Canvas Styling */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
 
+        /* Hero Content must be above the 3D canvas */
+        #home-content {
+            position: relative;
+            z-index: 20;
+            padding-top: 6rem;
+        }
+
+        /* View Container for Multi-Page App */
+        .view-container {
+            min-height: calc(100vh - 4rem); /* Ensure content takes up most of the screen */
+        }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-700 antialiased">
 
-    <!-- 
-        ============================================================ 
-        1. Navigation Bar (Sticky, Responsive, with Dark Mode Toggle)
-        ============================================================ 
-    -->
     <nav class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-lg transition duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex-shrink-0 font-extrabold text-2xl text-indigo-600 dark:text-indigo-400">
+                <div class="flex-shrink-0 font-extrabold text-2xl text-indigo-600 dark:text-indigo-400 cursor-pointer" onclick="showView('home-view')">
                     &lt;EVIL /&gt;
                 </div>
 
-                <!-- Desktop Nav Links -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#home" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Home</a>
-                        <a href="#about" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">About</a>
-                        <a href="#portfolio" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Portfolio</a>
-                        <a href="#contact" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Contact</a>
+                        <a href="#" onclick="showView('home-view')" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Home</a>
+                        <a href="#" onclick="showView('blog-view')" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Blog/Updates</a>
+                        <a href="#contact" onclick="showView('home-view'); document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Contact</a>
                     </div>
                 </div>
 
-                <!-- Dark Mode Toggle & Mobile Menu Button -->
                 <div class="flex items-center">
                     <button id="theme-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300" aria-label="Toggle Dark Mode">
                         <i id="theme-icon" class="fas fa-sun text-xl"></i>
                     </button>
-                    <!-- Mobile Menu Button (Hamburger) -->
                     <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 ml-3" aria-label="Open main menu">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -70,179 +75,274 @@
             </div>
         </div>
 
-        <!-- Mobile Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Home</a>
-                <a href="#about" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">About</a>
-                <a href="#portfolio" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Portfolio</a>
-                <a href="#contact" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Contact</a>
+                <a href="#" onclick="showView('home-view')" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Home</a>
+                <a href="#" onclick="showView('blog-view')" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Blog/Updates</a>
+                <a href="#contact" onclick="showView('home-view'); document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Contact</a>
             </div>
         </div>
     </nav>
 
-    <!-- 
-        ============================================================ 
-        2. Hero Section (Dynamic Typewriter Effect)
-        ============================================================ 
-    -->
-    <header id="home" class="relative overflow-hidden pt-24 pb-32 bg-indigo-50 dark:bg-gray-900 transition duration-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-[fadeIn_1.5s_ease-out]">
-            <p class="text-xl font-medium text-indigo-600 dark:text-indigo-400 mb-4">Hello, World!</p>
-            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-6">
-                I'm <span class="text-indigo-700 dark:text-indigo-400">[EVIL]</span>
-            </h1>
-            <p id="typewriter-text" class="text-2xl font-light text-gray-600 dark:text-gray-300 h-8"></p>
-            <a href="#portfolio" class="mt-8 inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
-                View My Work <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-        </div>
-    </header>
-
-    <main>
-        <!-- 
-            ============================================================ 
-            3. About Section (Scroll Reveal) - UPDATED with LLM Feature
-            ============================================================ 
-        -->
-        <section id="about" class="py-20 scroll-reveal">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">About Me</h2>
-                <div class="lg:flex lg:items-center lg:space-x-12">
-                    <!-- Profile Card -->
-                    <div class="lg:w-1/3 p-6 card bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-indigo-100 dark:border-gray-700 mb-8 lg:mb-0 transform hover:shadow-indigo-500/20 transition duration-500">
-                        <div class="flex justify-center mb-6">
-                            <div class="w-32 h-32 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-4xl text-indigo-600 dark:text-indigo-400 border-4 border-indigo-300 dark:border-indigo-600">
-                                <i class="fas fa-user-tie"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-center text-2xl font-semibold text-gray-900 dark:text-white">Professional Profile</h3>
-                        <ul class="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                            <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Role: Full Stack Developer</li>
-                            <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Focus: Scalable Cloud Architecture</li>
-                            <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Experience: 5+ Years</li>
-                        </ul>
-                    </div>
-
-                    <!-- Description and New LLM Feature -->
-                    <div class="lg:w-2/3">
-                        <p id="about-description" class="text-lg leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
-                            I am a **results-driven software engineer** specializing in the MERN stack (MongoDB, Express, React, Node.js). My passion lies in translating complex business requirements into elegant, high-performance web applications. I thrive in environments that challenge me to explore new technologies and optimize for accessibility and speed.
-                        </p>
-                        <div class="grid grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 font-medium mb-6">
-                            <p><i class="fas fa-rocket text-indigo-500 mr-2"></i> Performance Optimization</p>
-                            <p><i class="fas fa-flask text-indigo-500 mr-2"></i> Unit & Integration Testing</p>
-                            <p><i class="fas fa-lock text-indigo-500 mr-2"></i> Security Best Practices</p>
-                            <p><i class="fas fa-palette text-indigo-500 mr-2"></i> Clean UI/UX Design</p>
-                        </div>
-                        
-                        <!-- NEW LLM Feature Block: Elevator Pitch Generator -->
-                        <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-xl shadow-inner mt-8">
-                            <h4 class="font-bold text-indigo-700 dark:text-indigo-300 mb-3 flex items-center">
-                                <i class="fas fa-magic mr-2"></i> AI Career Assistant
-                            </h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                                Generate a concise, attention-grabbing elevator pitch based on the description above.
-                            </p>
-                            <button id="generate-pitch-btn" 
-                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-105 disabled:opacity-50">
-                                ✨ Generate Elevator Pitch
-                            </button>
-                            <div id="pitch-output-area" class="mt-4 hidden p-3 bg-white dark:bg-gray-800 rounded-lg border-l-4 border-indigo-500">
-                                <p id="loading-indicator" class="text-center text-gray-500 dark:text-gray-400 hidden">
-                                    <i class="fas fa-spinner fa-spin mr-2"></i> Generating pitch...
-                                </p>
-                                <p id="generated-pitch" class="text-gray-900 dark:text-gray-100 italic"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 
-            ============================================================ 
-            4. Portfolio/Skills Section (Animated Grid)
-            ============================================================ 
-        -->
-        <section id="portfolio" class="py-20 bg-gray-100 dark:bg-gray-800 scroll-reveal">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Skills & Projects</h2>
-                
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Skill Card 1: Frontend -->
-                    <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-indigo-500 transform hover:scale-[1.02] transition duration-300">
-                        <i class="fab fa-react text-4xl text-indigo-500 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Frontend Mastery</h3>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">React, Next.js, Redux, Tailwind CSS. Building highly dynamic and stateful single-page applications.</p>
-                    </div>
-                    
-                    <!-- Skill Card 2: Backend -->
-                    <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-green-500 transform hover:scale-[1.02] transition duration-300">
-                        <i class="fas fa-server text-4xl text-green-500 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Backend & APIs</h3>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">Node.js, Express, RESTful & GraphQL APIs, secure authentication flows (JWT/OAuth).</p>
-                    </div>
-
-                    <!-- Skill Card 3: Database & Cloud -->
-                    <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-500 transform hover:scale-[1.02] transition duration-300">
-                        <i class="fas fa-cloud text-4xl text-yellow-500 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Database & DevOps</h3>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm">PostgreSQL, MongoDB, Docker, CI/CD pipelines, and cloud services (AWS/GCP).</p>
-                    </div>
-                    
-                </div>
-
-                <!-- Placeholder Project Link -->
-                <div class="mt-12 text-center">
-                    <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-indigo-600 dark:text-indigo-400 bg-white dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 shadow-lg transition duration-300">
-                        Explore Full Project Repository <i class="fab fa-github ml-2"></i>
+    <div id="view-router">
+        
+        <section id="home-view" class="view-container">
+            <header id="home" class="relative overflow-hidden pt-24 pb-32 min-h-[50vh] bg-gray-900 dark:bg-gray-900 transition duration-500">
+                <canvas id="hero-canvas"></canvas>
+                <div id="home-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-[fadeIn_1.5s_ease-out] text-white">
+                    <p class="text-xl font-medium text-indigo-400 mb-4">Hello, World!</p>
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
+                        I'm <span class="text-indigo-400">[EVIL]</span>
+                    </h1>
+                    <p id="typewriter-text" class="text-2xl font-light h-8"></p>
+                    <a href="#portfolio" class="mt-8 inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+                        View My Work <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
-            </div>
+            </header>
+
+            <main>
+                <section id="about" class="py-20 scroll-reveal">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">About Me</h2>
+                        <div class="lg:flex lg:items-center lg:space-x-12">
+                            <div class="lg:w-1/3 p-6 card bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-indigo-100 dark:border-gray-700 mb-8 lg:mb-0 transform hover:shadow-indigo-500/20 transition duration-500">
+                                <div class="flex justify-center mb-6">
+                                    <div class="w-32 h-32 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-4xl text-indigo-600 dark:text-indigo-400 border-4 border-indigo-300 dark:border-indigo-600">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                </div>
+                                <h3 class="text-center text-2xl font-semibold text-gray-900 dark:text-white">Professional Profile</h3>
+                                <ul class="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Role: Full Stack Developer</li>
+                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Focus: Scalable Cloud Architecture</li>
+                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Experience: 5+ Years</li>
+                                </ul>
+                            </div>
+
+                            <div class="lg:w-2/3">
+                                <p id="about-description" class="text-lg leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
+                                    I am a **results-driven software engineer** specializing in the MERN stack (MongoDB, Express, React, Node.js). My passion lies in translating complex business requirements into elegant, high-performance web applications. I thrive in environments that challenge me to explore new technologies and optimize for accessibility and speed.
+                                </p>
+                                <div class="grid grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 font-medium mb-6">
+                                    <p><i class="fas fa-rocket text-indigo-500 mr-2"></i> Performance Optimization</p>
+                                    <p><i class="fas fa-flask text-indigo-500 mr-2"></i> Unit & Integration Testing</p>
+                                    <p><i class="fas fa-lock text-indigo-500 mr-2"></i> Security Best Practices</p>
+                                    <p><i class="fas fa-palette text-indigo-500 mr-2"></i> Clean UI/UX Design</p>
+                                </div>
+                                
+                                <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-xl shadow-inner mt-8">
+                                    <h4 class="font-bold text-indigo-700 dark:text-indigo-300 mb-3 flex items-center">
+                                        <i class="fas fa-magic mr-2"></i> AI Career Assistant
+                                    </h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                        Generate a concise, attention-grabbing elevator pitch based on the description above.
+                                    </p>
+                                    <button id="generate-pitch-btn" 
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-indigo-600 hover:bg-indigo-700 transition duration-300 transform hover:scale-105 disabled:opacity-50">
+                                        ✨ Generate Elevator Pitch
+                                    </button>
+                                    <div id="pitch-output-area" class="mt-4 hidden p-3 bg-white dark:bg-gray-800 rounded-lg border-l-4 border-indigo-500">
+                                        <p id="loading-indicator" class="text-center text-gray-500 dark:text-gray-400 hidden">
+                                            <i class="fas fa-spinner fa-spin mr-2"></i> Generating pitch...
+                                        </p>
+                                        <p id="generated-pitch" class="text-gray-900 dark:text-gray-100 italic"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="portfolio" class="py-20 bg-gray-100 dark:bg-gray-800 scroll-reveal">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Skills & Projects</h2>
+                        
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div onclick="showProjectDetail(1)" class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-indigo-500 transform hover:scale-[1.02] cursor-pointer transition duration-300">
+                                <i class="fab fa-react text-4xl text-indigo-500 mb-4"></i>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">React E-Commerce Platform</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">A full-stack commerce site featuring integrated payment gateways and real-time inventory.</p>
+                            </div>
+                            
+                            <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-green-500 transform hover:scale-[1.02] transition duration-300">
+                                <i class="fas fa-server text-4xl text-green-500 mb-4"></i>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Backend & APIs</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Node.js, Express, RESTful & GraphQL APIs, secure authentication flows (JWT/OAuth).</p>
+                            </div>
+
+                            <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-500 transform hover:scale-[1.02] transition duration-300">
+                                <i class="fas fa-cloud text-4xl text-yellow-500 mb-4"></i>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Database & DevOps</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">PostgreSQL, MongoDB, Docker, CI/CD pipelines, and cloud services (AWS/GCP).</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 text-center">
+                            <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-indigo-600 dark:text-indigo-400 bg-white dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 shadow-lg transition duration-300">
+                                Explore Full Project Repository <i class="fab fa-github ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="contact" class="py-20 scroll-reveal">
+                    <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                        <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Let's Connect</h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mb-10">
+                            I am actively seeking new opportunities and collaborations. Reach out directly via email to discuss potential projects or roles.
+                        </p>
+
+                        <a href="mailto:singha70850@gmail.com" 
+                            class="w-full sm:w-auto inline-flex items-center justify-center mx-auto px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-2xl shadow-red-500/40 transition duration-300 transform hover:scale-105">
+                            <i class="fas fa-paper-plane mr-3"></i> 
+                            Email Me: singha70850@gmail.com
+                        </a>
+                    </div>
+                </section>
+            </main>
         </section>
 
-        <!-- 
-            ============================================================ 
-            5. Contact Section (Direct Email Link)
-            ============================================================ 
-        -->
-        <section id="contact" class="py-20 scroll-reveal">
-            <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Let's Connect</h2>
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-10">
-                    I am actively seeking new opportunities and collaborations. Reach out directly via email to discuss potential projects or roles.
-                </p>
-
-                <!-- Direct Email Link -->
-                <a href="mailto:singha70850@gmail.com" 
-                   class="w-full sm:w-auto inline-flex items-center justify-center mx-auto px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-2xl shadow-red-500/40 transition duration-300 transform hover:scale-105">
-                    <i class="fas fa-paper-plane mr-3"></i> 
-                    Email Me: singha70850@gmail.com
-                </a>
-
-                <!-- Social Icons removed -->
+        <section id="blog-view" class="view-container hidden py-20 bg-gray-50 dark:bg-gray-900">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Developer Blog & Updates</h2>
                 
+                <div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl mb-8 transform hover:shadow-indigo-500/20 transition duration-300">
+                    <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-2">Mastering the MERN Stack in 2025</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Posted on October 20, 2025 | Topic: Frontend</p>
+                    <p class="text-gray-700 dark:text-gray-300">A deep dive into how I use React Hooks and modern state management to build highly performant, server-side rendered applications with Next.js architecture.</p>
+                </div>
+
+                <div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl mb-8 transform hover:shadow-indigo-500/20 transition duration-300">
+                    <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-2">The Power of Cloud Functions for Backendless Apps</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Posted on September 15, 2025 | Topic: Cloud/DevOps</p>
+                    <p class="text-gray-700 dark:text-gray-300">Exploring serverless architecture with AWS Lambda and Google Cloud Functions to handle authentication and database interactions cheaply and scalably.</p>
+                </div>
             </div>
         </section>
-    </main>
 
-    <!-- 
-        ============================================================ 
-        6. Footer
-        ============================================================ 
-    -->
+        <section id="project-detail-view" class="view-container hidden py-20 bg-gray-100 dark:bg-gray-800">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <button onclick="showView('home-view')" class="mb-8 inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 transition duration-300">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Portfolio
+                </button>
+
+                <h2 id="project-title" class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Project Title Here</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">A detailed look at the technology stack, challenges, and solutions for this specific project.</p>
+
+                <div class="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-2xl">
+                    <h3 class="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mb-4 flex items-center">
+                        <i class="fas fa-terminal mr-3"></i> AI Code Analyst (Gemini API)
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">Paste any code snippet below (JS, Python, HTML, etc.). The AI will syntax-highlight it and provide a brief explanation of what the code does.</p>
+                    
+                    <textarea id="code-input" rows="8" placeholder="Paste your code snippet here..." 
+                              class="w-full p-4 font-mono rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500 mb-4 text-sm"></textarea>
+                    
+                    <button id="analyze-code-btn" 
+                        class="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-full text-white bg-green-600 hover:bg-green-700 transition duration-300 disabled:opacity-50">
+                        <i class="fas fa-microchip mr-2"></i> Analyze & Highlight Code
+                    </button>
+
+                    <div id="code-loading" class="mt-4 hidden text-center text-green-500">
+                        <i class="fas fa-spinner fa-spin mr-2"></i> Analyzing code...
+                    </div>
+                    
+                    <div id="code-output-container" class="mt-6 hidden p-4 code-output bg-gray-900 dark:bg-gray-900 rounded-lg shadow-inner">
+                        <p class="font-semibold text-green-400 mb-2">AI Explanation:</p>
+                        <p id="code-explanation" class="text-gray-300 text-sm mb-4 whitespace-pre-wrap"></p>
+                        
+                        <p class="font-semibold text-green-400 mb-2">Highlighted Code:</p>
+                        <pre class="overflow-x-auto text-xs"><code id="highlighted-code" class="whitespace-pre"></code></pre>
+                    </div>
+                </div>
+                </div>
+        </section>
+
+    </div>
+
     <footer class="py-8 bg-gray-800 dark:bg-gray-900 text-center text-gray-400 text-sm">
-        <p>&copy; 2025 [EVIL]. Built with Tailwind CSS and High-Level JavaScript. All Rights Reserved.</p>
+        <p>&copy; 2025 [EVIL]. Built with Tailwind CSS, Three.js, and Gemini API. All Rights Reserved.</p>
     </footer>
 
-    <!-- 
-        ============================================================ 
-        7. JavaScript (Dynamic Features & Gemini API)
-        ============================================================ 
-    -->
     <script>
-        // --- 1. Dark Mode Toggling ---
+        // --- 0. Global Setup & Utilities ---
+        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=';
+        const MAX_RETRIES = 3;
+
+        async function fetchWithRetry(payload, attempt = 1) {
+            const apiKey = ""; 
+            const url = API_URL + apiKey;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.status === 429 && attempt < MAX_RETRIES) {
+                    const delay = Math.pow(2, attempt) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(payload, attempt + 1);
+                }
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status: ${response.status}`);
+                }
+
+                return response.json();
+
+            } catch (error) {
+                if (attempt < MAX_RETRIES) {
+                    const delay = Math.pow(2, attempt) * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(payload, attempt + 1);
+                }
+                throw new Error("Gemini API call failed after multiple retries: " + error.message);
+            }
+        }
+
+        function extractTextFromResponse(response) {
+            return response.candidates?.[0]?.content?.parts?.[0]?.text || "Generation failed: Could not get a valid response.";
+        }
+
+        // --- 1. View Router ---
+        const views = ['home-view', 'blog-view', 'project-detail-view'];
+        function showView(viewId) {
+            views.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+
+            // Special logic to stop/start Three.js animation
+            if (viewId === 'home-view') {
+                if (window.animateThreeJs) {
+                    window.shouldAnimate = true;
+                    window.animateThreeJs();
+                }
+            } else {
+                window.shouldAnimate = false;
+            }
+
+            // Scroll to top of the new view
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function showProjectDetail(projectId) {
+            // Placeholder logic to load project data
+            const projectData = {
+                1: "React E-Commerce Platform"
+            };
+            document.getElementById('project-title').textContent = projectData[projectId];
+            showView('project-detail-view');
+        }
+
+
+        // --- 2. Dark Mode Toggling ---
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
 
@@ -276,43 +376,42 @@
         applyTheme();
 
 
-        // --- 2. Typewriter Effect for Hero Text ---
-        const textToType = ["Full Stack Developer.", "A Creative Problem Solver.", "Building Dynamic Experiences."];
-        const typewriterElement = document.getElementById('typewriter-text');
-        let textIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
+        // --- 3. Typewriter Effect for Hero Text ---
+        function initializeTypewriter() {
+            const textToType = ["Full Stack Developer.", "A Creative Problem Solver.", "Building Dynamic Experiences."];
+            const typewriterElement = document.getElementById('typewriter-text');
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
 
-        function type() {
-            const currentText = textToType[textIndex];
-            if (isDeleting) {
-                typewriterElement.textContent = currentText.substring(0, charIndex--);
-            } else {
-                typewriterElement.textContent = currentText.substring(0, charIndex++);
+            function type() {
+                if (!typewriterElement) return; // Guard for view switching
+                const currentText = textToType[textIndex];
+                
+                if (isDeleting) {
+                    typewriterElement.textContent = currentText.substring(0, charIndex--);
+                } else {
+                    typewriterElement.textContent = currentText.substring(0, charIndex++);
+                }
+
+                let typeSpeed = 80;
+                if (isDeleting) typeSpeed /= 2; 
+
+                if (!isDeleting && charIndex === currentText.length + 1) {
+                    typeSpeed = 2000;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % textToType.length;
+                    typeSpeed = 500;
+                }
+                setTimeout(type, typeSpeed);
             }
-
-            let typeSpeed = 80;
-
-            if (isDeleting) {
-                typeSpeed /= 2; 
-            }
-
-            if (!isDeleting && charIndex === currentText.length + 1) {
-                typeSpeed = 2000;
-                isDeleting = true;
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % textToType.length;
-                typeSpeed = 500;
-            }
-
-            setTimeout(type, typeSpeed);
+            setTimeout(type, 1000);
         }
 
-        setTimeout(type, 1000);
 
-
-        // --- 3. Scroll Reveal Animation (Intersection Observer API) ---
+        // --- 4. Scroll Reveal Animation (Intersection Observer API) ---
         function setupScrollReveal() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -330,73 +429,166 @@
             });
         }
 
-        window.addEventListener('load', setupScrollReveal);
+        // --- 5. Three.js 3D Low-Poly Background Animation ---
+        function initializeThreeJs() {
+            const canvas = document.getElementById('hero-canvas');
+            if (!canvas) return;
+            
+            let scene, camera, renderer, geometry, material, particles, particleCount = 2000;
+            window.shouldAnimate = true;
 
+            function init() {
+                const width = canvas.clientWidth;
+                const height = canvas.clientHeight;
 
-        // --- 4. Mobile Menu Toggle ---
-        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
-        
-        // --- 5. Gemini API Helpers and Elevator Pitch Feature ---
-        const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=';
-        const MAX_RETRIES = 3;
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+                camera.position.z = 5;
 
-        /**
-         * Generic function to call the Gemini API with exponential backoff.
-         * @param {object} payload - The request payload.
-         * @param {number} attempt - Current retry attempt.
-         * @returns {Promise<object>} The parsed API response.
-         */
-        async function fetchWithRetry(payload, attempt = 1) {
-            const apiKey = ""; 
-            const url = API_URL + apiKey;
+                renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                
+                // Create particles
+                geometry = new THREE.BufferGeometry();
+                const positions = [];
+                const colors = [];
+                const color = new THREE.Color();
+                
+                for (let i = 0; i < particleCount; i++) {
+                    // Position randomly in a box
+                    positions.push(
+                        (Math.random() - 0.5) * 200, // x
+                        (Math.random() - 0.5) * 200, // y
+                        (Math.random() - 0.5) * 200  // z
+                    );
+                    
+                    // Assign subtle blue/purple color
+                    color.setHSL(0.6, 0.5, Math.random() * 0.5 + 0.5);
+                    colors.push(color.r, color.g, color.b);
+                }
+                
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                material = new THREE.PointsMaterial({
+                    size: 0.2,
+                    vertexColors: true,
+                    sizeAttenuation: true
                 });
 
-                if (response.status === 429 && attempt < MAX_RETRIES) {
-                    const delay = Math.pow(2, attempt) * 1000;
-                    console.warn(`Rate limit hit, retrying in ${delay / 1000}s... (Attempt ${attempt})`);
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return fetchWithRetry(payload, attempt + 1);
+                particles = new THREE.Points(geometry, material);
+                scene.add(particles);
+
+                window.addEventListener('resize', onWindowResize, false);
+            }
+
+            function onWindowResize() {
+                const width = canvas.clientWidth;
+                const height = canvas.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }
+
+            function animate() {
+                if (!window.shouldAnimate) return; // Pause animation when view switches
+                requestAnimationFrame(animate);
+
+                // Simple rotation and movement
+                particles.rotation.x += 0.0001;
+                particles.rotation.y += 0.0002;
+                particles.position.z += 0.005; // Fly forward slowly
+
+                // Reset position to create looping effect
+                if (particles.position.z > 5) {
+                    particles.position.z = -50;
                 }
 
-                if (!response.ok) {
-                    const errorBody = await response.json();
-                    throw new Error(`API error: ${response.status} - ${JSON.stringify(errorBody)}`);
-                }
+                renderer.render(scene, camera);
+            }
 
-                return response.json();
+            window.animateThreeJs = animate; // Expose to global scope for view switching
+            
+            init();
+            animate();
+        }
+
+        // --- 6. LLM Feature Logic: Code Analyst ---
+        document.getElementById('analyze-code-btn')?.addEventListener('click', analyzeCode);
+
+        async function analyzeCode() {
+            const codeInput = document.getElementById('code-input');
+            const btn = document.getElementById('analyze-code-btn');
+            const loading = document.getElementById('code-loading');
+            const outputContainer = document.getElementById('code-output-container');
+            const explanationOutput = document.getElementById('code-explanation');
+            const codeOutput = document.getElementById('highlighted-code');
+            const code = codeInput.value.trim();
+
+            if (!code) {
+                alert('Please paste a code snippet to analyze.'); // Using alert for simplicity in this utility context
+                return;
+            }
+
+            // 1. UI State: Start Loading
+            btn.disabled = true;
+            loading.classList.remove('hidden');
+            outputContainer.classList.add('hidden');
+            explanationOutput.textContent = '';
+            codeOutput.textContent = '';
+
+
+            // 2. Prepare Payload for Structured Output
+            const userQuery = `Analyze the following code snippet. Provide a brief explanation of what it does, and then return the original code, enclosed in a markdown code block (triple backticks). Do not add any extra text outside the JSON structure. Code:\n\n${code}`;
+            const systemPrompt = "You are an expert code analyst and syntax highlighter. You must always return a JSON object with two fields: 'explanation' (a brief summary of the code) and 'highlighted_code' (the original code wrapped in a markdown code block).";
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "explanation": { "type": "STRING", "description": "A brief summary of the code's function." },
+                            "highlighted_code": { "type": "STRING", "description": "The original code snippet wrapped in a markdown code block (e.g., ```javascript\\n...code...\\n```)." }
+                        },
+                        "propertyOrdering": ["explanation", "highlighted_code"]
+                    }
+                }
+            };
+
+            try {
+                // 3. Call Gemini API
+                const response = await fetchWithRetry(payload);
+                const jsonText = extractTextFromResponse(response);
+                const result = JSON.parse(jsonText);
+
+                // 4. Extract and Clean Output
+                explanationOutput.textContent = result.explanation;
+                
+                // Remove the markdown fences (```lang) to display raw code content
+                let rawCode = result.highlighted_code.replace(/```[a-z]*\n|```/g, '').trim();
+                codeOutput.textContent = rawCode; 
+
+                // 5. UI State: Display Result
+                outputContainer.classList.remove('hidden');
 
             } catch (error) {
-                if (attempt < MAX_RETRIES) {
-                    const delay = Math.pow(2, attempt) * 1000;
-                    console.error(`Fetch failed, retrying in ${delay / 1000}s... (Attempt ${attempt})`, error);
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    return fetchWithRetry(payload, attempt + 1);
-                }
-                throw new Error("Gemini API call failed after multiple retries: " + error.message);
+                console.error("Error analyzing code:", error);
+                explanationOutput.textContent = "Error: Failed to analyze code. The input may be too long or the API request failed. Check the console for details.";
+                codeOutput.textContent = '';
+                outputContainer.classList.remove('hidden');
+            } finally {
+                // 6. UI State: Stop Loading
+                btn.disabled = false;
+                loading.classList.add('hidden');
             }
         }
-
-        /**
-         * Extracts text from the Gemini response.
-         * @param {object} response - The raw API response object.
-         * @returns {string} The generated text.
-         */
-        function extractTextFromResponse(response) {
-            return response.candidates?.[0]?.content?.parts?.[0]?.text || "Generation failed: Could not get a valid response.";
-        }
-
-
-        // Main feature logic for Elevator Pitch
-        document.getElementById('generate-pitch-btn').addEventListener('click', generateElevatorPitch);
+        
+        // --- 7. LLM Feature Logic: Elevator Pitch Generator ---
+        document.getElementById('generate-pitch-btn')?.addEventListener('click', generateElevatorPitch);
 
         async function generateElevatorPitch() {
             const btn = document.getElementById('generate-pitch-btn');
@@ -443,6 +635,15 @@
                 btn.innerHTML = '✨ Generate Elevator Pitch';
                 loadingIndicator.classList.add('hidden');
             }
+        }
+
+
+        // --- Initialization ---
+        window.onload = function () {
+            initializeThreeJs();
+            initializeTypewriter();
+            setupScrollReveal();
+            showView('home-view'); // Ensure the home view is visible on load
         }
     </script>
 </body>
