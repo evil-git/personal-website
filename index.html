@@ -3,34 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVIL - The Ultimate Pro Portfolio (Admin Enabled)</title>
-    <!-- Load Tailwind CSS -->
+    <title>EVIL - The Ultimate Pro Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Load Three.js for 3D graphics (Crucial for the hero animation) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <!-- Firebase SDK Imports for Database and Auth -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        
-        // These are global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        if (firebaseConfig) {
-            window.firebaseApp = initializeApp(firebaseConfig);
-            window.db = getFirestore(window.firebaseApp);
-            window.auth = getAuth(window.firebaseApp);
-            window.appId = appId; // Attach to window for use in script block
-            window.initialAuthToken = initialAuthToken; // Attach to window for use in script block
-        }
-    </script>
-    
     <style>
         /* Custom Configuration and Base Styles */
         html { scroll-behavior: smooth; }
@@ -45,7 +22,6 @@
         .dark .card { background-color: #2d3748; border-color: #4a5568; }
         .dark .section-title { color: #fff; }
         .dark .code-output { background-color: #0d1117; } /* Dark background for code block */
-        .dark .admin-form-group input, .dark .admin-form-group textarea { background-color: #1a202c !important; border-color: #4a5568 !important; color: #e2e8f0 !important; }
         
         /* 3D Canvas Styling */
         #hero-canvas {
@@ -73,20 +49,13 @@
 
 <body class="bg-gray-50 text-gray-700 antialiased">
 
-    <!-- 
-        ============================================================ 
-        1. Navigation Bar (Sticky, Responsive, with Admin Button)
-        ============================================================ 
-    -->
     <nav class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-lg transition duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
                 <div class="flex-shrink-0 font-extrabold text-2xl text-indigo-600 dark:text-indigo-400 cursor-pointer" onclick="showView('home-view')">
                     &lt;EVIL /&gt;
                 </div>
 
-                <!-- Desktop Nav Links -->
                 <div class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#" onclick="showView('home-view')" class="nav-link text-gray-700 dark:text-gray-300 px-3 py-2 rounded-md font-medium hover:text-indigo-600 dark:hover:text-indigo-400">Home</a>
@@ -95,17 +64,10 @@
                     </div>
                 </div>
 
-                <!-- Dark Mode Toggle & Admin/Mobile Menu Button -->
                 <div class="flex items-center">
-                    <!-- Admin Panel Button (Visible only when authenticated) -->
-                    <button id="admin-btn" onclick="showView('admin-view')" class="p-2 mr-3 rounded-full text-white bg-red-500 hover:bg-red-600 transition duration-300 hidden" aria-label="Admin Panel">
-                        <i class="fas fa-user-shield text-xl"></i>
-                    </button>
-
                     <button id="theme-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300" aria-label="Toggle Dark Mode">
                         <i id="theme-icon" class="fas fa-sun text-xl"></i>
                     </button>
-                    <!-- Mobile Menu Button (Hamburger) -->
                     <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 ml-3" aria-label="Open main menu">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -113,29 +75,18 @@
             </div>
         </div>
 
-        <!-- Mobile Menu (Hidden by default) -->
         <div id="mobile-menu" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#" onclick="showView('home-view')" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Home</a>
                 <a href="#" onclick="showView('blog-view')" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Blog/Updates</a>
                 <a href="#contact" onclick="showView('home-view'); document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="block text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium">Contact</a>
-                <a href="#" id="admin-mobile-link" onclick="showView('admin-view')" class="block text-red-500 hover:bg-red-50 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium hidden"><i class="fas fa-user-shield mr-2"></i> Admin Panel</a>
             </div>
         </div>
     </nav>
 
-    <!-- 
-        ============================================================ 
-        2. Main View Container (Controls multi-page logic)
-        ============================================================ 
-    -->
     <div id="view-router">
         
-        <!-- ======================================================= -->
-        <!-- 2A. HOME VIEW (Default) -->
-        <!-- ======================================================= -->
         <section id="home-view" class="view-container">
-            <!-- 2A.1 Hero Section (3D Animated Background) -->
             <header id="home" class="relative overflow-hidden pt-24 pb-32 min-h-[50vh] bg-gray-900 dark:bg-gray-900 transition duration-500">
                 <canvas id="hero-canvas"></canvas>
                 <div id="home-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-[fadeIn_1.5s_ease-out] text-white">
@@ -151,12 +102,10 @@
             </header>
 
             <main>
-                <!-- 2A.2 About Section (AI Pitch Generator) -->
                 <section id="about" class="py-20 scroll-reveal">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">About Me</h2>
                         <div class="lg:flex lg:items-center lg:space-x-12">
-                            <!-- Profile Card -->
                             <div class="lg:w-1/3 p-6 card bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-indigo-100 dark:border-gray-700 mb-8 lg:mb-0 transform hover:shadow-indigo-500/20 transition duration-500">
                                 <div class="flex justify-center mb-6">
                                     <div class="w-32 h-32 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-4xl text-indigo-600 dark:text-indigo-400 border-4 border-indigo-300 dark:border-indigo-600">
@@ -165,16 +114,15 @@
                                 </div>
                                 <h3 class="text-center text-2xl font-semibold text-gray-900 dark:text-white">Professional Profile</h3>
                                 <ul class="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Role: <span id="ui-role">Full Stack Developer</span></li>
-                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Focus: <span id="ui-focus">Scalable Cloud Architecture</span></li>
-                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Experience: <span id="ui-experience">5+ Years</span></li>
+                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Role: Full Stack Developer</li>
+                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Focus: Scalable Cloud Architecture</li>
+                                    <li><i class="fas fa-check-circle text-indigo-500 mr-2"></i> Experience: 5+ Years</li>
                                 </ul>
                             </div>
 
-                            <!-- Description and LLM Feature -->
                             <div class="lg:w-2/3">
                                 <p id="about-description" class="text-lg leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
-                                    <!-- Content loaded from Firestore -->
+                                    I am a **results-driven software engineer** specializing in the MERN stack (MongoDB, Express, React, Node.js). My passion lies in translating complex business requirements into elegant, high-performance web applications. I thrive in environments that challenge me to explore new technologies and optimize for accessibility and speed.
                                 </p>
                                 <div class="grid grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 font-medium mb-6">
                                     <p><i class="fas fa-rocket text-indigo-500 mr-2"></i> Performance Optimization</p>
@@ -183,7 +131,6 @@
                                     <p><i class="fas fa-palette text-indigo-500 mr-2"></i> Clean UI/UX Design</p>
                                 </div>
                                 
-                                <!-- LLM Feature Block: Elevator Pitch Generator -->
                                 <div class="bg-indigo-50 dark:bg-gray-700 p-4 rounded-xl shadow-inner mt-8">
                                     <h4 class="font-bold text-indigo-700 dark:text-indigo-300 mb-3 flex items-center">
                                         <i class="fas fa-magic mr-2"></i> AI Career Assistant
@@ -207,35 +154,30 @@
                     </div>
                 </section>
 
-                <!-- 2A.3 Portfolio/Skills Section (Animated Grid) -->
                 <section id="portfolio" class="py-20 bg-gray-100 dark:bg-gray-800 scroll-reveal">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Skills & Projects</h2>
                         
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <!-- Skill Card 1 (Clickable to show project-detail-view) -->
-                            <div onclick="showProjectDetail('skill1')" class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-indigo-500 transform hover:scale-[1.02] cursor-pointer transition duration-300">
+                            <div onclick="showProjectDetail(1)" class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-indigo-500 transform hover:scale-[1.02] cursor-pointer transition duration-300">
                                 <i class="fab fa-react text-4xl text-indigo-500 mb-4"></i>
-                                <h3 id="ui-skill1-title" class="text-xl font-semibold text-gray-900 dark:text-white mb-2"><!-- Content loaded from Firestore --></h3>
-                                <p id="ui-skill1-desc" class="text-gray-600 dark:text-gray-300 text-sm"><!-- Content loaded from Firestore --></p>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">React E-Commerce Platform</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">A full-stack commerce site featuring integrated payment gateways and real-time inventory.</p>
                             </div>
                             
-                            <!-- Skill Card 2: Backend -->
                             <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-green-500 transform hover:scale-[1.02] transition duration-300">
                                 <i class="fas fa-server text-4xl text-green-500 mb-4"></i>
-                                <h3 id="ui-skill2-title" class="text-xl font-semibold text-gray-900 dark:text-white mb-2"><!-- Content loaded from Firestore --></h3>
-                                <p id="ui-skill2-desc" class="text-gray-600 dark:text-gray-300 text-sm"><!-- Content loaded from Firestore --></p>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Backend & APIs</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">Node.js, Express, RESTful & GraphQL APIs, secure authentication flows (JWT/OAuth).</p>
                             </div>
 
-                            <!-- Skill Card 3: Database & Cloud -->
                             <div class="card p-6 bg-white dark:bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-500 transform hover:scale-[1.02] transition duration-300">
                                 <i class="fas fa-cloud text-4xl text-yellow-500 mb-4"></i>
-                                <h3 id="ui-skill3-title" class="text-xl font-semibold text-gray-900 dark:text-white mb-2"><!-- Content loaded from Firestore --></h3>
-                                <p id="ui-skill3-desc" class="text-gray-600 dark:text-gray-300 text-sm"><!-- Content loaded from Firestore --></p>
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Database & DevOps</h3>
+                                <p class="text-gray-600 dark:text-gray-300 text-sm">PostgreSQL, MongoDB, Docker, CI/CD pipelines, and cloud services (AWS/GCP).</p>
                             </div>
                         </div>
 
-                        <!-- Placeholder Project Link -->
                         <div class="mt-12 text-center">
                             <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-indigo-600 dark:text-indigo-400 bg-white dark:bg-gray-700 hover:bg-indigo-50 dark:hover:bg-gray-600 shadow-lg transition duration-300">
                                 Explore Full Project Repository <i class="fab fa-github ml-2"></i>
@@ -244,7 +186,6 @@
                     </div>
                 </section>
 
-                <!-- 2A.4 Contact Section (Direct Email Link) -->
                 <section id="contact" class="py-20 scroll-reveal">
                     <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                         <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">Let's Connect</h2>
@@ -252,7 +193,6 @@
                             I am actively seeking new opportunities and collaborations. Reach out directly via email to discuss potential projects or roles.
                         </p>
 
-                        <!-- Direct Email Link -->
                         <a href="mailto:singha70850@gmail.com" 
                             class="w-full sm:w-auto inline-flex items-center justify-center mx-auto px-10 py-4 border border-transparent text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-2xl shadow-red-500/40 transition duration-300 transform hover:scale-105">
                             <i class="fas fa-paper-plane mr-3"></i> 
@@ -263,32 +203,24 @@
             </main>
         </section>
 
-        <!-- ======================================================= -->
-        <!-- 2B. BLOG/UPDATES VIEW -->
-        <!-- ======================================================= -->
         <section id="blog-view" class="view-container hidden py-20 bg-gray-50 dark:bg-gray-900">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Developer Blog & Updates</h2>
                 
-                <!-- Blog Post 1 -->
                 <div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl mb-8 transform hover:shadow-indigo-500/20 transition duration-300">
-                    <h3 id="ui-blog1-title" class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-2"><!-- Content loaded from Firestore --></h3>
+                    <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-2">Mastering the MERN Stack in 2025</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Posted on October 20, 2025 | Topic: Frontend</p>
-                    <p id="ui-blog1-content" class="text-gray-700 dark:text-gray-300"><!-- Content loaded from Firestore --></p>
+                    <p class="text-gray-700 dark:text-gray-300">A deep dive into how I use React Hooks and modern state management to build highly performant, server-side rendered applications with Next.js architecture.</p>
                 </div>
 
-                <!-- Blog Post 2 -->
                 <div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl mb-8 transform hover:shadow-indigo-500/20 transition duration-300">
-                    <h3 id="ui-blog2-title" class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-2"><!-- Content loaded from Firestore --></h3>
+                    <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-2">The Power of Cloud Functions for Backendless Apps</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Posted on September 15, 2025 | Topic: Cloud/DevOps</p>
-                    <p id="ui-blog2-content" class="text-gray-700 dark:text-gray-300"><!-- Content loaded from Firestore --></p>
+                    <p class="text-gray-700 dark:text-gray-300">Exploring serverless architecture with AWS Lambda and Google Cloud Functions to handle authentication and database interactions cheaply and scalably.</p>
                 </div>
             </div>
         </section>
 
-        <!-- ======================================================= -->
-        <!-- 2C. PROJECT DETAIL VIEW (LLM Code Highlighter) -->
-        <!-- ======================================================= -->
         <section id="project-detail-view" class="view-container hidden py-20 bg-gray-100 dark:bg-gray-800">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <button onclick="showView('home-view')" class="mb-8 inline-flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 transition duration-300">
@@ -298,7 +230,6 @@
                 <h2 id="project-title" class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Project Title Here</h2>
                 <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">A detailed look at the technology stack, challenges, and solutions for this specific project.</p>
 
-                <!-- LLM Feature Block: Code Highlighter -->
                 <div class="bg-white dark:bg-gray-700 p-6 rounded-xl shadow-2xl">
                     <h3 class="text-2xl font-bold text-indigo-700 dark:text-indigo-300 mb-4 flex items-center">
                         <i class="fas fa-terminal mr-3"></i> AI Code Analyst (Gemini API)
@@ -325,106 +256,19 @@
                         <pre class="overflow-x-auto text-xs"><code id="highlighted-code" class="whitespace-pre"></code></pre>
                     </div>
                 </div>
-                <!-- End LLM Feature Block -->
-
-            </div>
-        </section>
-
-        <!-- ======================================================= -->
-        <!-- 2D. ADMIN PANEL VIEW (Protected by Auth) -->
-        <!-- ======================================================= -->
-        <section id="admin-view" class="view-container hidden py-20 bg-gray-100 dark:bg-gray-900">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-6">
-                    <i class="fas fa-cogs text-red-500 mr-3"></i> Website Admin Panel
-                </h2>
-                <p id="admin-status" class="text-center text-lg font-medium text-red-600 dark:text-red-400 mb-8">
-                    Status: Authenticating...
-                </p>
-
-                <div id="admin-content-forms" class="hidden">
-                    
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl mb-8">
-                        <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4 border-b pb-2">Profile & About Section</h3>
-                        <div class="space-y-4">
-                            <div class="admin-form-group">
-                                <label for="admin-role" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Role</label>
-                                <input type="text" id="admin-role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="admin-focus" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Focus</label>
-                                <input type="text" id="admin-focus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="admin-about-desc" class="block text-sm font-medium text-gray-700 dark:text-gray-300">About Description (Full)</label>
-                                <textarea id="admin-about-desc" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl mb-8">
-                        <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4 border-b pb-2">Skill/Portfolio Card 1</h3>
-                        <div class="space-y-4">
-                            <div class="admin-form-group">
-                                <label for="admin-skill1-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                                <input type="text" id="admin-skill1-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="admin-skill1-desc" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                                <textarea id="admin-skill1-desc" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl mb-8">
-                        <h3 class="text-2xl font-semibold text-indigo-600 dark:text-indigo-400 mb-4 border-b pb-2">Blog Post 1</h3>
-                        <div class="space-y-4">
-                            <div class="admin-form-group">
-                                <label for="admin-blog1-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                                <input type="text" id="admin-blog1-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="admin-blog1-content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content Snippet</label>
-                                <textarea id="admin-blog1-content" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="text-center mt-8">
-                        <button id="save-admin-btn" onclick="saveSiteContent()" class="px-8 py-3 text-lg font-bold rounded-full text-white bg-red-600 hover:bg-red-700 shadow-xl transition duration-300 transform hover:scale-105 disabled:opacity-50">
-                            <i class="fas fa-save mr-2"></i> Save All Changes
-                        </button>
-                        <p id="save-message" class="mt-4 text-green-600 dark:text-green-400 font-medium"></p>
-                    </div>
-
                 </div>
-            </div>
         </section>
 
     </div>
 
-    <!-- 
-        ============================================================ 
-        6. Footer
-        ============================================================ 
-    -->
     <footer class="py-8 bg-gray-800 dark:bg-gray-900 text-center text-gray-400 text-sm">
         <p>&copy; 2025 [EVIL]. Built with Tailwind CSS, Three.js, and Gemini API. All Rights Reserved.</p>
     </footer>
 
-    <!-- 
-        ============================================================ 
-        7. JavaScript (Dynamic Features, Firebase, and Gemini API)
-        ============================================================ 
-    -->
     <script>
         // --- 0. Global Setup & Utilities ---
         const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=';
         const MAX_RETRIES = 3;
-        
-        let isAuthReady = false;
-        let isAdmin = false;
 
         async function fetchWithRetry(payload, attempt = 1) {
             const apiKey = ""; 
@@ -462,32 +306,10 @@
         function extractTextFromResponse(response) {
             return response.candidates?.[0]?.content?.parts?.[0]?.text || "Generation failed: Could not get a valid response.";
         }
-        
-        const defaultContent = {
-            role: "Full Stack Developer",
-            focus: "Scalable Cloud Architecture",
-            experience: "5+ Years",
-            aboutDescription: "I am a **results-driven software engineer** specializing in the MERN stack (MongoDB, Express, React, Node.js). My passion lies in translating complex business requirements into elegant, high-performance web applications. I thrive in environments that challenge me to explore new technologies and optimize for accessibility and speed.",
-            skill1Title: "Frontend Mastery",
-            skill1Desc: "React, Next.js, Redux, Tailwind CSS. Building highly dynamic and stateful single-page applications.",
-            skill2Title: "Backend & APIs",
-            skill2Desc: "Node.js, Express, RESTful & GraphQL APIs, secure authentication flows (JWT/OAuth).",
-            skill3Title: "Database & DevOps",
-            skill3Desc: "PostgreSQL, MongoDB, Docker, CI/CD pipelines, and cloud services (AWS/GCP).",
-            blog1Title: "Mastering the MERN Stack in 2025",
-            blog1Content: "A deep dive into how I use React Hooks and modern state management to build highly performant, server-side rendered applications with Next.js architecture.",
-            blog2Title: "The Power of Cloud Functions for Backendless Apps",
-            blog2Content: "Exploring serverless architecture with AWS Lambda and Google Cloud Functions to handle authentication and database interactions cheaply and scalably."
-        };
 
         // --- 1. View Router ---
-        const views = ['home-view', 'blog-view', 'project-detail-view', 'admin-view'];
+        const views = ['home-view', 'blog-view', 'project-detail-view'];
         function showView(viewId) {
-            if (viewId === 'admin-view' && !isAdmin) {
-                alert("Authentication required to access the Admin Panel.");
-                return;
-            }
-
             views.forEach(id => {
                 document.getElementById(id).classList.add('hidden');
             });
@@ -513,11 +335,9 @@
         function showProjectDetail(projectId) {
             // Placeholder logic to load project data
             const projectData = {
-                'skill1': document.getElementById('ui-skill1-title').textContent,
-                'skill2': document.getElementById('ui-skill2-title').textContent,
-                'skill3': document.getElementById('ui-skill3-title').textContent
+                1: "React E-Commerce Platform"
             };
-            document.getElementById('project-title').textContent = projectData[projectId] || 'Project Details';
+            document.getElementById('project-title').textContent = projectData[projectId];
             showView('project-detail-view');
         }
 
@@ -565,7 +385,7 @@
             let isDeleting = false;
 
             function type() {
-                if (!typewriterElement) return;
+                if (!typewriterElement) return; // Guard for view switching
                 const currentText = textToType[textIndex];
                 
                 if (isDeleting) {
@@ -636,12 +456,14 @@
                 const color = new THREE.Color();
                 
                 for (let i = 0; i < particleCount; i++) {
+                    // Position randomly in a box
                     positions.push(
-                        (Math.random() - 0.5) * 200, 
-                        (Math.random() - 0.5) * 200, 
-                        (Math.random() - 0.5) * 200
+                        (Math.random() - 0.5) * 200, // x
+                        (Math.random() - 0.5) * 200, // y
+                        (Math.random() - 0.5) * 200  // z
                     );
                     
+                    // Assign subtle blue/purple color
                     color.setHSL(0.6, 0.5, Math.random() * 0.5 + 0.5);
                     colors.push(color.r, color.g, color.b);
                 }
@@ -670,13 +492,15 @@
             }
 
             function animate() {
-                if (!window.shouldAnimate) return; 
+                if (!window.shouldAnimate) return; // Pause animation when view switches
                 requestAnimationFrame(animate);
 
+                // Simple rotation and movement
                 particles.rotation.x += 0.0001;
                 particles.rotation.y += 0.0002;
-                particles.position.z += 0.005;
+                particles.position.z += 0.005; // Fly forward slowly
 
+                // Reset position to create looping effect
                 if (particles.position.z > 5) {
                     particles.position.z = -50;
                 }
@@ -684,7 +508,7 @@
                 renderer.render(scene, camera);
             }
 
-            window.animateThreeJs = animate;
+            window.animateThreeJs = animate; // Expose to global scope for view switching
             
             init();
             animate();
@@ -694,7 +518,6 @@
         document.getElementById('analyze-code-btn')?.addEventListener('click', analyzeCode);
 
         async function analyzeCode() {
-            // ... (Code Analyst logic remains the same, omitted for brevity) ...
             const codeInput = document.getElementById('code-input');
             const btn = document.getElementById('analyze-code-btn');
             const loading = document.getElementById('code-loading');
@@ -704,16 +527,19 @@
             const code = codeInput.value.trim();
 
             if (!code) {
-                alert('Please paste a code snippet to analyze.');
+                alert('Please paste a code snippet to analyze.'); // Using alert for simplicity in this utility context
                 return;
             }
 
+            // 1. UI State: Start Loading
             btn.disabled = true;
             loading.classList.remove('hidden');
             outputContainer.classList.add('hidden');
             explanationOutput.textContent = '';
             codeOutput.textContent = '';
 
+
+            // 2. Prepare Payload for Structured Output
             const userQuery = `Analyze the following code snippet. Provide a brief explanation of what it does, and then return the original code, enclosed in a markdown code block (triple backticks). Do not add any extra text outside the JSON structure. Code:\n\n${code}`;
             const systemPrompt = "You are an expert code analyst and syntax highlighter. You must always return a JSON object with two fields: 'explanation' (a brief summary of the code) and 'highlighted_code' (the original code wrapped in a markdown code block).";
             
@@ -725,8 +551,8 @@
                     responseSchema: {
                         type: "OBJECT",
                         properties: {
-                            "explanation": { "type": "STRING", "description": "A brief summary of the code's function" },
-                            "highlighted_code": { "type": "STRING", "description": "The original code snippet wrapped in a markdown code block" }
+                            "explanation": { "type": "STRING", "description": "A brief summary of the code's function." },
+                            "highlighted_code": { "type": "STRING", "description": "The original code snippet wrapped in a markdown code block (e.g., ```javascript\\n...code...\\n```)." }
                         },
                         "propertyOrdering": ["explanation", "highlighted_code"]
                     }
@@ -734,13 +560,19 @@
             };
 
             try {
+                // 3. Call Gemini API
                 const response = await fetchWithRetry(payload);
                 const jsonText = extractTextFromResponse(response);
                 const result = JSON.parse(jsonText);
 
+                // 4. Extract and Clean Output
                 explanationOutput.textContent = result.explanation;
+                
+                // Remove the markdown fences (```lang) to display raw code content
                 let rawCode = result.highlighted_code.replace(/```[a-z]*\n|```/g, '').trim();
                 codeOutput.textContent = rawCode; 
+
+                // 5. UI State: Display Result
                 outputContainer.classList.remove('hidden');
 
             } catch (error) {
@@ -749,6 +581,7 @@
                 codeOutput.textContent = '';
                 outputContainer.classList.remove('hidden');
             } finally {
+                // 6. UI State: Stop Loading
                 btn.disabled = false;
                 loading.classList.add('hidden');
             }
@@ -758,19 +591,21 @@
         document.getElementById('generate-pitch-btn')?.addEventListener('click', generateElevatorPitch);
 
         async function generateElevatorPitch() {
-            // ... (Elevator Pitch logic remains the same, omitted for brevity) ...
             const btn = document.getElementById('generate-pitch-btn');
             const aboutText = document.getElementById('about-description').textContent.trim();
             const outputArea = document.getElementById('pitch-output-area');
             const loadingIndicator = document.getElementById('loading-indicator');
             const generatedPitch = document.getElementById('generated-pitch');
 
+            // 1. UI State: Start Loading
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generating...';
             outputArea.classList.remove('hidden');
             loadingIndicator.classList.remove('hidden');
             generatedPitch.textContent = '';
 
+
+            // 2. Prepare Payload
             const userQuery = `Using the following professional profile description, write a compelling, 30-second elevator pitch (approximately 2-3 sentences long) that focuses on impact and skills:\n\n---\n${aboutText}`;
             const systemPrompt = "You are a world-class professional copywriter and career coach. Your goal is to take a developer's long description and condense it into a sharp, energetic, and highly professional elevator pitch. Output ONLY the pitch.";
 
@@ -779,183 +614,37 @@
                 systemInstruction: { parts: [{ text: systemPrompt }] },
                 generationConfig: { 
                     temperature: 0.8,
-                    maxOutputTokens: 200 
+                    maxOutputTokens: 200 // Ensure the pitch stays concise
                 }
             };
 
             try {
+                // 3. Call Gemini API
                 const response = await fetchWithRetry(payload);
                 const pitch = extractTextFromResponse(response);
+                
+                // 4. UI State: Display Result
                 generatedPitch.textContent = pitch;
 
             } catch (error) {
                 console.error("Error generating elevator pitch:", error);
                 generatedPitch.textContent = "Error: Failed to generate pitch. Please check the console for details.";
             } finally {
+                // 5. UI State: Stop Loading
                 btn.disabled = false;
                 btn.innerHTML = '✨ Generate Elevator Pitch';
                 loadingIndicator.classList.add('hidden');
             }
         }
-        
-        // --- 8. Firestore Content Management ---
-        
-        function getSiteDocRef() {
-            const db = window.db;
-            const appId = window.appId;
-            return db ? doc(db, `artifacts/${appId}/public/data/site_content`, 'main_config') : null;
-        }
 
-        function updateUI(data) {
-            document.getElementById('about-description').textContent = data.aboutDescription || defaultContent.aboutDescription;
-            document.getElementById('ui-role').textContent = data.role || defaultContent.role;
-            document.getElementById('ui-focus').textContent = data.focus || defaultContent.focus;
-            document.getElementById('ui-experience').textContent = data.experience || defaultContent.experience;
-            
-            document.getElementById('ui-skill1-title').textContent = data.skill1Title || defaultContent.skill1Title;
-            document.getElementById('ui-skill1-desc').textContent = data.skill1Desc || defaultContent.skill1Desc;
-            document.getElementById('ui-skill2-title').textContent = data.skill2Title || defaultContent.skill2Title;
-            document.getElementById('ui-skill2-desc').textContent = data.skill2Desc || defaultContent.skill2Desc;
-            document.getElementById('ui-skill3-title').textContent = data.skill3Title || defaultContent.skill3Title;
-            document.getElementById('ui-skill3-desc').textContent = data.skill3Desc || defaultContent.skill3Desc;
 
-            document.getElementById('ui-blog1-title').textContent = data.blog1Title || defaultContent.blog1Title;
-            document.getElementById('ui-blog1-content').textContent = data.blog1Content || defaultContent.blog1Content;
-            document.getElementById('ui-blog2-title').textContent = data.blog2Title || defaultContent.blog2Title;
-            document.getElementById('ui-blog2-content').textContent = data.blog2Content || defaultContent.blog2Content;
-        }
-        
-        function loadAdminForms(data) {
-            document.getElementById('admin-role').value = data.role || defaultContent.role;
-            document.getElementById('admin-focus').value = data.focus || defaultContent.focus;
-            document.getElementById('admin-about-desc').value = data.aboutDescription || defaultContent.aboutDescription;
-            document.getElementById('admin-skill1-title').value = data.skill1Title || defaultContent.skill1Title;
-            document.getElementById('admin-skill1-desc').value = data.skill1Desc || defaultContent.skill1Desc;
-            // Simplified: Copy data for other cards to the admin panel from the UI if needed
-            document.getElementById('admin-blog1-title').value = data.blog1Title || defaultContent.blog1Title;
-            document.getElementById('admin-blog1-content').value = data.blog1Content || defaultContent.blog1Content;
-        }
-
-        async function saveSiteContent() {
-            const btn = document.getElementById('save-admin-btn');
-            const message = document.getElementById('save-message');
-            btn.disabled = true;
-            message.textContent = 'Saving...';
-            
-            const newContent = {
-                role: document.getElementById('admin-role').value,
-                focus: document.getElementById('admin-focus').value,
-                aboutDescription: document.getElementById('admin-about-desc').value,
-                skill1Title: document.getElementById('admin-skill1-title').value,
-                skill1Desc: document.getElementById('admin-skill1-desc').value,
-                // Hardcoding skill 2 & 3 data for simplicity, but can be managed too
-                skill2Title: document.getElementById('ui-skill2-title').textContent,
-                skill2Desc: document.getElementById('ui-skill2-desc').textContent,
-                skill3Title: document.getElementById('ui-skill3-title').textContent,
-                skill3Desc: document.getElementById('ui-skill3-desc').textContent,
-                blog1Title: document.getElementById('admin-blog1-title').value,
-                blog1Content: document.getElementById('admin-blog1-content').value,
-                blog2Title: document.getElementById('ui-blog2-title').textContent,
-                blog2Content: document.getElementById('ui-blog2-content').textContent,
-                timestamp: new Date().toISOString()
-            };
-            
-            try {
-                const docRef = getSiteDocRef();
-                if (docRef) {
-                    await setDoc(docRef, newContent, { merge: true });
-                    message.textContent = 'Changes saved successfully! UI is updated.';
-                } else {
-                    message.textContent = 'Error: Database not initialized.';
-                }
-            } catch (error) {
-                console.error("Error saving document: ", error);
-                message.textContent = `Error saving: ${error.message}`;
-            } finally {
-                btn.disabled = false;
-                setTimeout(() => message.textContent = '', 5000);
-            }
-        }
-
-        // --- 9. Initialization and Auth ---
-        
-        async function initializeAppFeatures() {
-            const { db, auth, initialAuthToken } = window;
-            const adminBtn = document.getElementById('admin-btn');
-            const adminMobileLink = document.getElementById('admin-mobile-link');
-            const adminStatus = document.getElementById('admin-status');
-            const adminForms = document.getElementById('admin-content-forms');
-
-            if (!db || !auth) {
-                 adminStatus.textContent = 'Error: Firebase failed to initialize.';
-                 return;
-            }
-
-            try {
-                if (initialAuthToken) {
-                    await auth.signInWithCustomToken(initialAuthToken);
-                } else {
-                    await auth.signInAnonymously();
-                }
-            } catch (error) {
-                console.error("Firebase Authentication failed:", error);
-                adminStatus.textContent = `Error: Authentication failed (${error.message}).`;
-            }
-
-            onAuthStateChanged(auth, async (user) => {
-                isAuthReady = true;
-                if (user) {
-                    // Assume any authenticated user is an Admin in this context
-                    isAdmin = true;
-                    adminBtn.classList.remove('hidden');
-                    adminMobileLink.classList.remove('hidden');
-                    adminStatus.textContent = `Status: Authenticated as Admin (User ID: ${user.uid}).`;
-                    adminForms.classList.remove('hidden');
-                    
-                    // Set up real-time listener for public content
-                    const docRef = getSiteDocRef();
-                    if (docRef) {
-                        onSnapshot(docRef, (docSnap) => {
-                            let data = docSnap.exists() ? docSnap.data() : defaultContent;
-                            updateUI(data);
-                            loadAdminForms(data); // Also load current data into forms
-                        }, (error) => {
-                            console.error("Firestore Listener Error:", error);
-                            // Fallback to default content on error
-                            updateUI(defaultContent);
-                            loadAdminForms(defaultContent);
-                        });
-                    } else {
-                        updateUI(defaultContent);
-                        loadAdminForms(defaultContent);
-                    }
-
-                } else {
-                    isAdmin = false;
-                    adminBtn.classList.add('hidden');
-                    adminMobileLink.classList.add('hidden');
-                    adminStatus.textContent = 'Status: Not Authenticated. Content is loaded from defaults.';
-                    adminForms.classList.add('hidden');
-
-                    // Fallback to loading a single time if not authenticated (should be covered by listener fallback, but good practice)
-                    const docRef = getSiteDocRef();
-                    const docSnap = await getDoc(docRef);
-                    let data = docSnap.exists() ? docSnap.data() : defaultContent;
-                    updateUI(data);
-                }
-            });
-
-            // Initialize all other features once Firebase setup is handled
+        // --- Initialization ---
+        window.onload = function () {
             initializeThreeJs();
             initializeTypewriter();
             setupScrollReveal();
-            showView('home-view');
+            showView('home-view'); // Ensure the home view is visible on load
         }
-
-        window.onload = function() {
-            // Delay execution slightly to ensure external firebase imports are done
-            setTimeout(initializeAppFeatures, 100);
-        };
     </script>
 </body>
 </html>
