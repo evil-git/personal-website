@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EVIL - The Ultimate Pro Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: "class" };</script>
+    <script>try{var _t=localStorage.getItem("theme");if(_t==="dark"||((!_t||_t==="system")&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark");}catch(e){}</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
@@ -44,10 +48,64 @@
         .view-container {
             min-height: calc(100vh - 4rem); /* Ensure content takes up most of the screen */
         }
+
+        /* ===== Scroll animation layer (added) ===== */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, #6366f1, #ec4899, #f59e0b); pointer-events: none; }
+        .fx, .fx-title { opacity: 0; }
+        .fx.in { animation: fxUp .9s cubic-bezier(.16,1,.3,1) both; }
+        .fx-left.in { animation-name: fxLeft; }
+        .fx-right.in { animation-name: fxRight; }
+        .fx-flip.in { animation-name: fxFlip; animation-duration: 1.1s; }
+        .fx-title.in { animation: fxTitle 1.1s cubic-bezier(.16,1,.3,1) both; }
+        @keyframes fxUp { from { opacity: 0; translate: 0 50px; filter: blur(8px); } to { opacity: 1; translate: 0 0; filter: none; } }
+        @keyframes fxLeft { from { opacity: 0; translate: -90px 0; filter: blur(8px); } to { opacity: 1; translate: 0 0; filter: none; } }
+        @keyframes fxRight { from { opacity: 0; translate: 90px 0; filter: blur(8px); } to { opacity: 1; translate: 0 0; filter: none; } }
+        @keyframes fxFlip { from { opacity: 0; translate: 0 70px; rotate: 1 0 0 -32deg; } to { opacity: 1; translate: 0 0; rotate: 1 0 0 0deg; } }
+        @keyframes fxTitle { from { opacity: 0; clip-path: inset(0 100% 0 0); translate: 0 30px; letter-spacing: .2em; } to { opacity: 1; clip-path: inset(-20% -10% -20% -10%); translate: 0 0; letter-spacing: 0; } }
+        #portfolio .grid { perspective: 1400px; }
+        .card { position: relative; }
+        .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s; background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(99,102,241,.22), transparent 60%); }
+        .card:hover::after { opacity: 1; }
+        .marq { background: #0b1020; overflow: hidden; padding: 2rem 0; display: grid; gap: .5rem; position: relative; z-index: 5; }
+        .marq-row { display: flex; width: max-content; white-space: nowrap; will-change: transform; }
+        .marq-row span { font-weight: 800; font-size: clamp(2.5rem, 8vw, 6rem); line-height: 1.1; padding-right: 2rem; color: transparent; -webkit-text-stroke: 1.5px rgba(165,180,252,.75); }
+        .marq-row:nth-child(2) span { -webkit-text-stroke-color: rgba(244,114,182,.75); }
+        @media (prefers-reduced-motion: reduce) {
+            .fx, .fx-title { opacity: 1 !important; animation: none !important; translate: none !important; rotate: none !important; clip-path: none !important; }
+            .scroll-reveal { opacity: 1; transform: none; transition: none; }
+        }
+
+        /* ===== Round 2 (added) ===== */
+        ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+        .theme-opt { width: 2rem; height: 2rem; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; color: #6b7280; transition: background .3s, color .3s; }
+        .dark .theme-opt { color: #9ca3af; }
+        .theme-opt[aria-checked="true"] { background: #6366f1; color: #fff; }
+        .theme-opt:focus-visible { outline: 2px solid #6366f1; outline-offset: 2px; }
+        .fx.done { opacity: 1; animation: none; }
+        .fx-title.done { opacity: 1; animation: none; clip-path: none; }
+        #home h1 span { background: linear-gradient(90deg, #818cf8, #f472b6, #fbbf24, #818cf8); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite; }
+        @keyframes shine { to { background-position: 300% 0; } }
+        .orb { position: absolute; z-index: 5; border-radius: 50%; filter: blur(70px); opacity: .35; pointer-events: none; animation: drift 12s ease-in-out infinite alternate; }
+        @keyframes drift { to { transform: translate(40px, -30px) scale(1.15); } }
+        .statement span { opacity: .15; }
+        .meter i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #6366f1, #ec4899); transform: scaleX(0); transform-origin: left; transition: transform 1.5s cubic-bezier(.16,1,.3,1); }
+        .meter.in i { transform: scaleX(var(--w)); }
+        .tl { position: relative; padding-left: 2.5rem; }
+        .tl::before { content: ""; position: absolute; left: .55rem; top: 0; bottom: 0; width: 2px; background: rgba(148,163,184,.35); }
+        .tl-fill { position: absolute; left: .55rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(#6366f1, #ec4899); transform-origin: top; transform: scaleY(0); }
+        .tl-step { position: relative; }
+        .tl-step + .tl-step { margin-top: 2.5rem; }
+        .tl-step::before { content: ""; position: absolute; left: -37px; top: .6rem; width: 14px; height: 14px; border-radius: 50%; background: #94a3b8; transition: background .4s, box-shadow .4s; }
+        .tl-step.lit::before { background: #6366f1; box-shadow: 0 0 0 6px rgba(99,102,241,.25), 0 0 18px #6366f1; }
+        @media (prefers-reduced-motion: reduce) {
+            .statement span { opacity: 1; } #statement { height: auto !important; } .meter i { transform: scaleX(var(--w)); transition: none; } .orb, #home h1 span { animation: none; } .tl-fill { transform: none; }
+        }
     </style>
 </head>
 
 <body class="bg-gray-50 text-gray-700 antialiased">
+    <div class="scroll-progress" aria-hidden="true"></div>
 
     <nav class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-lg transition duration-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,9 +123,11 @@
                 </div>
 
                 <div class="flex items-center">
-                    <button id="theme-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300" aria-label="Toggle Dark Mode">
-                        <i id="theme-icon" class="fas fa-sun text-xl"></i>
-                    </button>
+                    <div id="theme-select" class="flex items-center rounded-full bg-gray-100 dark:bg-gray-700 p-1" role="radiogroup" aria-label="Color theme">
+                        <button type="button" class="theme-opt" data-theme="light" role="radio" aria-checked="false" aria-label="Light mode"><i class="fas fa-sun"></i></button>
+                        <button type="button" class="theme-opt" data-theme="system" role="radio" aria-checked="false" aria-label="Match system theme"><i class="fas fa-desktop"></i></button>
+                        <button type="button" class="theme-opt" data-theme="dark" role="radio" aria-checked="false" aria-label="Dark mode"><i class="fas fa-moon"></i></button>
+                    </div>
                     <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 ml-3" aria-label="Open main menu">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -89,6 +149,9 @@
         <section id="home-view" class="view-container">
             <header id="home" class="relative overflow-hidden pt-24 pb-32 min-h-[50vh] bg-gray-900 dark:bg-gray-900 transition duration-500">
                 <canvas id="hero-canvas"></canvas>
+                <div class="orb" data-d=".25" style="left:6%;top:10%;width:22rem;height:22rem;background:#6366f1"></div>
+                <div class="orb" data-d="-.15" style="right:4%;top:30%;width:20rem;height:20rem;background:#ec4899"></div>
+                <div class="orb" data-d=".35" style="left:40%;bottom:-6rem;width:18rem;height:18rem;background:#f59e0b"></div>
                 <div id="home-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-[fadeIn_1.5s_ease-out] text-white">
                     <p class="text-xl font-medium text-indigo-400 mb-4">Hello, World!</p>
                     <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6">
@@ -100,6 +163,11 @@
                     </a>
                 </div>
             </header>
+
+            <div class="marq" aria-hidden="true">
+                <div class="marq-row"><span>React &bull; Node.js &bull; MongoDB &bull; AWS &bull; Docker &bull; GraphQL &bull; PostgreSQL &bull;</span></div>
+                <div class="marq-row"><span>Clean UI/UX &bull; Testing &bull; Security &bull; Performance &bull; CI/CD &bull; Cloud &bull;</span></div>
+            </div>
 
             <main>
                 <section id="about" class="py-20 scroll-reveal">
@@ -150,6 +218,38 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="statement" style="height:240vh">
+                    <div class="sticky flex items-center" style="top:4rem;height:calc(100vh - 4rem)">
+                        <div class="max-w-5xl mx-auto px-6">
+                            <p id="statement-text" class="statement text-3xl sm:text-5xl font-extrabold leading-tight text-gray-900 dark:text-white">I build software that scales, stays fast and feels good to use, from the database all the way to the button you click.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="stats" class="py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                        <div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><b class="block text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400" data-to="5" data-suf="+">5+</b><span class="text-sm text-gray-500 dark:text-gray-400">Years of experience</span></div><div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><b class="block text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400" data-to="20" data-suf="+">20+</b><span class="text-sm text-gray-500 dark:text-gray-400">Projects shipped</span></div><div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><b class="block text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400" data-to="12" data-suf="+">12+</b><span class="text-sm text-gray-500 dark:text-gray-400">Technologies used</span></div><div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><b class="block text-4xl sm:text-5xl font-extrabold text-indigo-600 dark:text-indigo-400" data-to="30" data-suf="+">30+</b><span class="text-sm text-gray-500 dark:text-gray-400">Cloud deployments</span></div>
+                    </div>
+                </section>
+
+                <section id="skills" class="py-20 bg-gray-100 dark:bg-gray-800">
+                    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Tech Stack</h2>
+                        <div class="grid gap-6"><div class="skill-row"><div class="flex justify-between mb-2 font-semibold text-gray-800 dark:text-gray-200"><span>React & Next.js</span><span data-to="92" data-suf="%">92%</span></div><div class="meter h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden" style="--w:0.92"><i></i></div></div><div class="skill-row"><div class="flex justify-between mb-2 font-semibold text-gray-800 dark:text-gray-200"><span>Node.js & Express</span><span data-to="90" data-suf="%">90%</span></div><div class="meter h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden" style="--w:0.9"><i></i></div></div><div class="skill-row"><div class="flex justify-between mb-2 font-semibold text-gray-800 dark:text-gray-200"><span>MongoDB & PostgreSQL</span><span data-to="85" data-suf="%">85%</span></div><div class="meter h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden" style="--w:0.85"><i></i></div></div><div class="skill-row"><div class="flex justify-between mb-2 font-semibold text-gray-800 dark:text-gray-200"><span>AWS & GCP</span><span data-to="80" data-suf="%">80%</span></div><div class="meter h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden" style="--w:0.8"><i></i></div></div><div class="skill-row"><div class="flex justify-between mb-2 font-semibold text-gray-800 dark:text-gray-200"><span>Docker & CI/CD</span><span data-to="82" data-suf="%">82%</span></div><div class="meter h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden" style="--w:0.82"><i></i></div></div></div>
+                    </div>
+                </section>
+
+                <section id="experience" class="py-20">
+                    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 class="section-title text-4xl font-bold text-center text-gray-900 dark:text-white mb-12">Experience</h2>
+                        <div class="tl"><div class="tl-fill"></div>
+                            <div class="tl-step"><div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><p class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">2024 - Present</p><h3 class="text-xl font-bold text-gray-900 dark:text-white">Senior Full Stack Developer</h3><p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Your Company Name</p><ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-300"><li>Build and maintain React front-ends and Node.js APIs</li><li>Design CI/CD pipelines and containerised services</li><li>Mentor developers and review code across the stack</li></ul></div></div>
+                            <div class="tl-step"><div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><p class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">2022 - 2024</p><h3 class="text-xl font-bold text-gray-900 dark:text-white">Full Stack Developer</h3><p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Previous Company</p><ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-300"><li>Shipped features end to end on the MERN stack</li><li>Improved performance and test coverage</li><li>Worked with product and design on clean UI/UX</li></ul></div></div>
+                            <div class="tl-step"><div class="card p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"><p class="text-sm font-semibold text-indigo-600 dark:text-indigo-400">2020 - 2022</p><h3 class="text-xl font-bold text-gray-900 dark:text-white">Junior Developer / Freelance</h3><p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Clients &amp; Side Projects</p><ul class="list-disc pl-5 space-y-1 text-sm text-gray-600 dark:text-gray-300"><li>Delivered websites and small web apps for clients</li><li>Learned cloud deployment, security and testing basics</li></ul></div></div>
                         </div>
                     </div>
                 </section>
@@ -342,38 +442,33 @@
         }
 
 
-        // --- 2. Dark Mode Toggling ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-
-        function applyTheme() {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const isDark = localStorage.getItem('theme') === 'dark' || (localStorage.getItem('theme') === null && prefersDark);
-            
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'light');
-            }
+        // --- 2. Theme selector: Light / System / Dark ---
+        const themeMQ = window.matchMedia('(prefers-color-scheme: dark)');
+        const motionOff = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        function getThemePref() { try { return localStorage.getItem('theme') || 'system'; } catch (e) { return 'system'; } }
+        function applyTheme(pref) {
+            const dark = pref === 'dark' || (pref === 'system' && themeMQ.matches);
+            document.documentElement.classList.toggle('dark', dark);
+            document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+            document.querySelectorAll('.theme-opt').forEach(b => b.setAttribute('aria-checked', String(b.dataset.theme === pref)));
         }
-
-        themeToggle.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-            themeIcon.classList.toggle('fa-sun');
-            themeIcon.classList.toggle('fa-moon');
-        });
-
-        applyTheme();
+        function setTheme(pref, x, y) {
+            try { localStorage.setItem('theme', pref); } catch (e) { /* storage blocked */ }
+            if (!document.startViewTransition || motionOff) { applyTheme(pref); return; }
+            const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+            document.startViewTransition(() => applyTheme(pref)).ready.then(() => {
+                document.documentElement.animate(
+                    { clipPath: ['circle(0px at ' + x + 'px ' + y + 'px)', 'circle(' + r + 'px at ' + x + 'px ' + y + 'px)'] },
+                    { duration: 650, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+                );
+            }).catch(() => {});
+        }
+        document.querySelectorAll('.theme-opt').forEach(b => b.addEventListener('click', (e) => {
+            const rc = b.getBoundingClientRect();
+            setTheme(b.dataset.theme, rc.left + rc.width / 2, rc.top + rc.height / 2);
+        }));
+        if (themeMQ.addEventListener) themeMQ.addEventListener('change', () => { if (getThemePref() === 'system') applyTheme('system'); });
+        applyTheme(getThemePref());
 
 
         // --- 3. Typewriter Effect for Hero Text ---
@@ -446,7 +541,7 @@
                 camera.position.z = 5;
 
                 renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-                renderer.setSize(width, height);
+                renderer.setSize(width, height, false);
                 renderer.setPixelRatio(window.devicePixelRatio);
                 
                 // Create particles
@@ -488,17 +583,20 @@
                 const height = canvas.clientHeight;
                 camera.aspect = width / height;
                 camera.updateProjectionMatrix();
-                renderer.setSize(width, height);
+                renderer.setSize(width, height, false);
             }
 
             function animate() {
-                if (!window.shouldAnimate) return; // Pause animation when view switches
+                if (!window.shouldAnimate) { running = false; return; } // Pause animation when view switches
                 requestAnimationFrame(animate);
 
                 // Simple rotation and movement
                 particles.rotation.x += 0.0001;
                 particles.rotation.y += 0.0002;
-                particles.position.z += 0.005; // Fly forward slowly
+                const k = window.heroScroll || 0, v = Math.min(window.scrollSpeed || 0, 80);
+                particles.rotation.z = k * 1.5;   // scroll twists the starfield
+                particles.position.y = k * 12;
+                particles.position.z += 0.005 + v * 0.01; // scroll speed warps it forward
 
                 // Reset position to create looping effect
                 if (particles.position.z > 5) {
@@ -508,10 +606,11 @@
                 renderer.render(scene, camera);
             }
 
-            window.animateThreeJs = animate; // Expose to global scope for view switching
+            let running = false;
+            window.animateThreeJs = function () { if (running) return; running = true; animate(); }; // Expose for view switching (no duplicate loops)
             
             init();
-            animate();
+            window.animateThreeJs();
         }
 
         // --- 6. LLM Feature Logic: Code Analyst ---
@@ -638,11 +737,180 @@
         }
 
 
+        // --- 8. Scroll-driven animations (added) ---
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        document.addEventListener('pointermove', (e) => {
+            const card = e.target.closest ? e.target.closest('.card') : null;
+            if (!card) return;
+            const r = card.getBoundingClientRect();
+            card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+            card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+
+        function initScrollFX() {
+            const $$ = (s) => Array.from(document.querySelectorAll(s));
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const tag = (sel, cls, step) => $$(sel).forEach((el, i) => {
+                el.classList.add('fx', cls);
+                el.style.animationDelay = (i * step) + 'ms';
+            });
+            try {
+                $$('.section-title').forEach(el => el.classList.add('fx-title'));
+                tag('#about .card', 'fx-left', 0);
+                const right = document.getElementById('about-description');
+                if (right && right.parentElement) right.parentElement.classList.add('fx', 'fx-right');
+                tag('#about ul li', 'fx-up', 140);
+                tag('#about .grid p', 'fx-up', 120);
+                tag('#portfolio .grid .card', 'fx-flip', 160);
+                tag('#portfolio .mt-12', 'fx-up', 0);
+                tag('#contact p, #contact a', 'fx-up', 160);
+                tag('#blog-view .card', 'fx-up', 140);
+                tag('#stats .card', 'fx-up', 120);
+                tag('.skill-row', 'fx-up', 90);
+                tag('.tl-step', 'fx-up', 0);
+
+                const targets = $$('.fx, .fx-title, .meter, [data-to]');
+                const countUp = (el) => {
+                    const to = +el.dataset.to, suf = el.dataset.suf || '';
+                    if (reduce) { el.textContent = to.toLocaleString('en-US') + suf; return; }
+                    let s = null;
+                    const stepFn = (ts) => {
+                        if (s === null) s = ts;
+                        const k = Math.min(1, (ts - s) / 1600), e = 1 - Math.pow(1 - k, 3);
+                        el.textContent = Math.round(to * e).toLocaleString('en-US') + suf;
+                        if (k < 1) requestAnimationFrame(stepFn);
+                    };
+                    requestAnimationFrame(stepFn);
+                };
+                const reveal = (el) => { el.classList.add('in'); if (el.dataset.to) countUp(el); };
+                if (reduce || !('IntersectionObserver' in window)) {
+                    targets.forEach(reveal);
+                } else {
+                    const io = new IntersectionObserver((entries) => {
+                        entries.forEach(en => { if (en.isIntersecting) { reveal(en.target); io.unobserve(en.target); } });
+                    }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+                    targets.forEach(el => io.observe(el));
+                    $$('.fx, .fx-title').forEach(el => el.addEventListener('animationend', (ev) => { if (ev.target === el) el.classList.add('done'); }));
+                }
+                if (reduce) return;
+
+                const rows = $$('.marq-row');
+                rows.forEach(r => { const s = r.firstElementChild; if (s) r.innerHTML = s.outerHTML.repeat(4); });
+                let seg = [];
+                const measure = () => { seg = rows.map(r => r.scrollWidth / 4); };
+                window.addEventListener('resize', measure);
+                measure();
+
+                const bar = document.querySelector('.scroll-progress');
+                const content = document.getElementById('home-content');
+                const hero = document.getElementById('home');
+                const floaters = $$('#portfolio .card i, #about .card .rounded-full');
+                let lastY = window.scrollY, vel = 0, frame = 0;
+                const clamp01 = (v) => Math.min(1, Math.max(0, v));
+                const stmt = document.getElementById('statement');
+                const stp = document.getElementById('statement-text');
+                if (stp) stp.innerHTML = stp.textContent.trim().split(/\s+/).map(w => '<span>' + w + '</span>').join(' ');
+                const words = stp ? Array.from(stp.children) : [];
+                const orbs = $$('.orb');
+                const tl = document.querySelector('.tl'), tlFill = document.querySelector('.tl-fill'), steps = $$('.tl-step');
+                let px = -9999, py = -9999;
+                window.addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; });
+                const mags = $$('#home a[href="#portfolio"], #contact a[href^="mailto"]').map(el => ({ el, x: 0, y: 0 }));
+                const tilts = $$('#portfolio .grid .card').map(el => ({ el, tx: 0, ty: 0, cx: 0, cy: 0 }));
+                tilts.forEach(s => {
+                    s.el.addEventListener('pointermove', (e) => {
+                        const r = s.el.getBoundingClientRect();
+                        s.tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+                        s.ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+                    });
+                    s.el.addEventListener('pointerleave', () => { s.tx = 0; s.ty = 0; });
+                });
+
+                function tick() {
+                    frame++;
+                    const y = window.scrollY, vh = window.innerHeight;
+                    const max = Math.max(1, document.documentElement.scrollHeight - vh);
+                    if (bar) bar.style.transform = 'scaleX(' + Math.min(1, y / max) + ')';
+
+                    vel += (Math.abs(y - lastY) - vel) * 0.12; lastY = y;
+                    window.scrollSpeed = vel;
+
+                    const hh = hero ? hero.offsetHeight : 0;
+                    const k = hh ? Math.min(1, y / hh) : 0;
+                    window.heroScroll = k;
+                    if (content && hh) {
+                        content.style.translate = '0 ' + (y * 0.35) + 'px';
+                        content.style.opacity = String(Math.max(0, 1 - k * 1.2));
+                        content.style.scale = String(1 + k * 0.12);
+                    }
+
+                    if (frame % 90 === 0) measure();
+                    rows.forEach((r, i) => {
+                        const s = seg[i]; if (!s) return;
+                        const o = (y * 0.6 + i * 140) % s;
+                        r.style.transform = 'translate3d(' + (i % 2 ? (o - s) : -o) + 'px,0,0)';
+                    });
+
+                    floaters.forEach(el => {
+                        const host = el.parentElement; if (!host) return;
+                        const r = host.getBoundingClientRect();
+                        if (!r.height) return;
+                        const c = (r.top + r.height / 2 - vh / 2) / vh;
+                        if (c < -1.2 || c > 1.2) return;
+                        el.style.translate = '0 ' + (c * -26) + 'px';
+                        el.style.rotate = (c * 16) + 'deg';
+                    });
+                    orbs.forEach(o => { o.style.translate = '0 ' + (y * Number(o.dataset.d || 0)) + 'px'; });
+
+                    if (stmt && words.length) {
+                        const r = stmt.getBoundingClientRect();
+                        if (r.height > 0) {
+                            const pr = clamp01((64 - r.top) / Math.max(1, r.height - vh + 64)), n = words.length;
+                            words.forEach((w, i) => { w.style.opacity = (0.15 + 0.85 * clamp01(pr * n * 1.15 - i)).toFixed(3); });
+                        }
+                    }
+
+                    if (tl && tlFill) {
+                        const r = tl.getBoundingClientRect();
+                        if (r.height > 0) {
+                            tlFill.style.transform = 'scaleY(' + clamp01((vh * 0.65 - r.top) / r.height) + ')';
+                            steps.forEach(s => s.classList.toggle('lit', s.getBoundingClientRect().top < vh * 0.65));
+                        }
+                    }
+
+                    mags.forEach(m => {
+                        const r = m.el.getBoundingClientRect();
+                        if (!r.width) return;
+                        const dx = px - (r.left + r.width / 2 - m.x), dy = py - (r.top + r.height / 2 - m.y);
+                        const near = Math.hypot(dx, dy) < Math.max(r.width, r.height) * 0.8;
+                        m.x += ((near ? dx * 0.3 : 0) - m.x) * 0.15;
+                        m.y += ((near ? dy * 0.3 : 0) - m.y) * 0.15;
+                        m.el.style.translate = (Math.abs(m.x) + Math.abs(m.y) < 0.05) ? 'none' : m.x + 'px ' + m.y + 'px';
+                    });
+
+                    tilts.forEach(s => {
+                        s.cx += (s.tx - s.cx) * 0.12; s.cy += (s.ty - s.cy) * 0.12;
+                        const a = Math.hypot(s.cx, s.cy) * 9;
+                        s.el.style.rotate = a > 0.02 ? (-s.cy) + ' ' + s.cx + ' 0 ' + a + 'deg' : 'none';
+                    });
+                    requestAnimationFrame(tick);
+                }
+                tick();
+            } catch (err) {
+                console.error('Scroll FX failed, showing content without animation:', err);
+                $$('.fx, .fx-title').forEach(el => el.classList.add('in'));
+            }
+        }
+
         // --- Initialization ---
         window.onload = function () {
             initializeThreeJs();
             initializeTypewriter();
             setupScrollReveal();
+            initScrollFX();
             showView('home-view'); // Ensure the home view is visible on load
         }
     </script>
